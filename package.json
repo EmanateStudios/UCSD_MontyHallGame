@@ -1,7 +1,7 @@
 {
-  "name": "ft-game",
+  "name": "door-probability",
   "version": "1.0.0",
-  "description": "A project made to measure how fast people can associate attributes to a given task in order to optimize efficiency of said task.",
+  "description": "A game to test how people learn when provided a game of probabilities with additional unknown factors left open to discovery.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/emansiu/EmanateStudios-UCSD-LearningGame.git"
+    "url": "git+https://github.com/EmanateStudios/UCSD_DoorProbabilityGame.git"
   },
   "keywords": [
     "learning",
@@ -21,9 +21,9 @@
   "author": "Emanuel Siu",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/emansiu/EmanateStudios-UCSD-LearningGame/issues"
+    "url": "https://github.com/EmanateStudios/UCSD_DoorProbabilityGame/issues"
   },
-  "homepage": "https://github.com/emansiu/EmanateStudios-UCSD-LearningGame#readme",
+  "homepage": "https://github.com/EmanateStudios/UCSD_DoorProbabilityGame",
   "dependencies": {
     "axios": "^0.19.2",
     "csv-stringify": "^5.5.0",
