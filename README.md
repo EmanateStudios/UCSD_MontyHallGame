@@ -7,3 +7,4 @@ Primary dependancies are:
 * Postgresql - paired with Sequelize
 * Three.js
 * Express
+* Parcel for packaging and building

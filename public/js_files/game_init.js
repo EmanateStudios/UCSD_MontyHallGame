@@ -1,4 +1,5 @@
 //Variables for setup
+console.log("inside game_init")
 
 let container;
 let camera;
@@ -36,7 +37,7 @@ function init() {
 
     //Load Model
     let loader = new THREE.GLTFLoader();
-    loader.load("../../THREE/Assets/gltf_files/Door.gltf", function (gltf) {
+    loader.load("../THREE/Assets/gltf_files/Door.gltf", function (gltf) {
         scene.add(gltf.scene);
         house = gltf.scene.children[0];
         animate();
@@ -59,3 +60,5 @@ function onWindowResize() {
 }
 
 window.addEventListener("resize", onWindowResize);
+
+
