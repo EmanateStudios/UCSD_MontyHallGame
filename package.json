@@ -1,0 +1,44 @@
+{
+  "name": "ft-game",
+  "version": "1.0.0",
+  "description": "A project made to measure how fast people can associate attributes to a given task in order to optimize efficiency of said task.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emansiu/EmanateStudios-UCSD-LearningGame.git"
+  },
+  "keywords": [
+    "learning",
+    "data",
+    "game",
+    "predictor",
+    "prediction"
+  ],
+  "author": "Emanuel Siu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emansiu/EmanateStudios-UCSD-LearningGame/issues"
+  },
+  "homepage": "https://github.com/emansiu/EmanateStudios-UCSD-LearningGame#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "csv-stringify": "^5.5.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "gsap": "^3.2.6",
+    "moment": "^2.25.0",
+    "node-localstorage": "^2.1.6",
+    "pg": "^8.0.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.6",
+    "sequelize-cli": "^5.5.1"
+  },
+  "engine": {
+    "npm": "6.13.6",
+    "node": "v10.13.0"
+  }
+}
