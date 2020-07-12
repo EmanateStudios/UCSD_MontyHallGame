@@ -35,10 +35,15 @@
     "pg": "^8.0.0",
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.21.6",
-    "sequelize-cli": "^5.5.1"
+    "sequelize-cli": "^5.5.1",
+    "three": "^0.118.3"
   },
   "engine": {
     "npm": "6.13.6",
     "node": "v10.13.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.4",
+    "@babel/preset-react": "^7.10.4"
   }
 }

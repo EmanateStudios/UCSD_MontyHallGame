@@ -1,11 +1,14 @@
 //Variables for setup
+import * as THREE from '../../node_modules/three';
+import { GLTFLoader } from '../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
+import doorGLTF from '../THREE/Assets/gltf_files/Door.gltf'
 console.log("inside game_init")
 
 let container;
 let camera;
 let renderer;
 let scene;
-let house;
+let door;
 
 function init() {
     container = document.querySelector(".scene");
@@ -36,17 +39,23 @@ function init() {
     container.appendChild(renderer.domElement);
 
     //Load Model
-    let loader = new THREE.GLTFLoader();
-    loader.load("../THREE/Assets/gltf_files/Door.gltf", function (gltf) {
-        scene.add(gltf.scene);
-        house = gltf.scene.children[0];
-        animate();
-    });
+
+    {
+        const loader = new GLTFLoader();
+        loader.load(doorGLTF, (gltf) => {
+
+            scene.add(gltf.scene);
+            door = gltf.scene.children[0];
+            animate();
+
+        });
+    }
+
 }
 
 function animate() {
     requestAnimationFrame(animate);
-    house.rotation.y += 0.005;
+    door.rotation.y += 0.005;
     renderer.render(scene, camera);
 }
 

@@ -1,8 +1,10 @@
-const init = require('./game_init');
-const animate = require('./game_init');
-const onWindowResize = require('./game_init');
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-console.log('hello');
+// const init = require('./game_init');
+// const animate = require('./game_init');
+// const onWindowResize = require('./game_init');
 
-init()
-window.addEventListener("resize", onWindowResize);
+// console.log('hello');
+
+// init()
+// window.addEventListener("resize", onWindowResize);
