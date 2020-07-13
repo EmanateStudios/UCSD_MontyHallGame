@@ -1,0 +1,32 @@
+/* set variable for size multiplier applied to screen size */
+:root {
+    --gradientOne:255,255,255;
+    --gradientTwo:34, 74, 138;
+}
+
+body {
+    background-color: burlywood;
+    margin:0;
+}
+
+canvas{
+    display:block;
+}
+.scene {
+    height: 100%;
+    width:100%;
+}
+
+.scene{
+    -webkit-background-size: auto;
+    -moz-background-size: auto;
+    -o-background-size: auto;
+    background-size: auto;
+    background: '#70bg32';
+    background-repeat:no-repeat;
+    background: -webkit-linear-gradient( rgb(var(--gradientOne)), rgb(var(--gradientTwo))); 
+    background: -moz-linear-gradient( rgb(var(--gradientOne)), rgb(var(--gradientTwo)));  
+    background: -ms-linear-gradient( rgb(var(--gradientOne)), rgb(var(--gradientTwo))); 
+    background: -o-linear-gradient( rgb(var(--gradientOne)), rgb(var(--gradientTwo))); 
+    background: linear-gradient( rgb(var(--gradientOne)), rgb(var(--gradientTwo))) fixed; 
+}
