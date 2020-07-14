@@ -18,7 +18,9 @@ let fadeIn = gsap.timeline()
 //--------------------- SCENE SETTINGS -----------------------------------------
 const scene = new THREE.Scene();
 //--------------------- CAMERA SETTINGS -----------------------------------------
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 10000);
+const nearClippingPlane = 0.06
+const farClippingPlane = 10000
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, nearClippingPlane, farClippingPlane);
 camera.position.set(0, 100, 300);
 
 //--------------------- RENDERER SETTINGS -----------------------------------------
@@ -26,13 +28,38 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 // enable shadow maps
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 // enable hdr settings
-renderer.physicallyCorrectLights = true;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
+// renderer.physicallyCorrectLights = true;
+// renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
 const container = document.querySelector(".scene"); //<-- our DOM Reference to HTML Div class "scene". 
 container.appendChild(renderer.domElement);
+
+//--------------------- LIGHT SETTINGS -----------------------------------------
+const directionLight = new THREE.DirectionalLight(0xFFFFFF, 2);
+directionLight.position.set(0, 100, 100)
+scene.add(directionLight);
+
+const dirLightHelper = new THREE.DirectionalLightHelper(directionLight, 5)
+scene.add(dirLightHelper)
+
+var ambientLight = new THREE.AmbientLight(0x404040, 6); // soft white light
+scene.add(ambientLight);
+
+const spotLight = new THREE.SpotLight(0xFFFFFF, 15, 400, 0.9, 1.0, 1.5) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
+spotLight.position.set(100, 300, 110)
+spotLight.castShadow = true;
+spotLight.shadow.mapSize.width = 1024;
+spotLight.shadow.mapSize.height = 1024;
+spotLight.shadow.camera.near = 0.01;
+spotLight.shadow.camera.far = 10000
+spotLight.shadow.bias = - 0.000001;
+scene.add(spotLight)
+
+const sphereSize = 20;
+const lightHelper = new THREE.SpotLightHelper(spotLight, sphereSize)
+scene.add(lightHelper)
 
 
 
@@ -64,7 +91,6 @@ loader.load(doorGLTF, (gltf) => {
     })
     doorMain = gltf.scene.children[1];
     doorFrame = gltf.scene.children[0];
-    console.log(doorMain)
     loaded = true;
     scene.add(gltf.scene);
     animate(loaded);
@@ -76,23 +102,6 @@ loader.load(doorGLTF, (gltf) => {
         console.error('An error occured. Try again later');
     }
 )
-
-
-
-//--------------------- LIGHT SETTINGS -----------------------------------------
-const spotLight = new THREE.SpotLight(0xFFFFFF, 3, 450, 0.9, 1.0, 1.6) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
-spotLight.position.set(0, 300, 110)
-spotLight.castShadow = true;
-spotLight.shadow.mapSize.width = 1024;
-spotLight.shadow.mapSize.height = 1024;
-// spotLight.shadow.camera.near = 1.0;
-// spotLight.shadow.camera.far = 10000
-spotLight.shadow.bias = - 0.00005;
-
-const sphereSize = 20;
-const lightHelper = new THREE.SpotLightHelper(spotLight, sphereSize)
-scene.add(spotLight)
-scene.add(lightHelper)
 
 
 
@@ -118,6 +127,7 @@ container.addEventListener("resize", onWindowResize);
 
 
 //============================= GAME CONTROL SECTION ====================================
+//---------------------------------------------------------------------------------------
 
 // -------------------- RAY CAST FOR BUTTON CLICK FUNCTION ------------------
 const raycaster = new THREE.Raycaster();
@@ -134,7 +144,7 @@ const GameClick = (event) => {
     // intersects returns array of what is clicked with ray cast
     let intersects = raycaster.intersectObjects(scene.children, true);
     intersects.map(item => {
-        if (item.object.name === "DoorMain") {
+        if (item.object.name === "main") {
             gsap.timeline()
                 .to(item.object.rotation, { duration: 1, y: 1.4, ease: "circ.inOut" })
                 .to(item.object.rotation, { duration: 1, y: 0, ease: "circ.inOut" })

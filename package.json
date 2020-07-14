@@ -29,7 +29,7 @@
     "csv-stringify": "^5.5.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "gsap": "^3.4.0",
+    "gsap": "^3.2.6",
     "moment": "^2.25.0",
     "node-localstorage": "^2.1.6",
     "pg": "^8.0.0",
@@ -41,9 +41,5 @@
   "engine": {
     "npm": "6.13.6",
     "node": "v10.13.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.10.4",
-    "@babel/preset-react": "^7.10.4"
   }
 }
