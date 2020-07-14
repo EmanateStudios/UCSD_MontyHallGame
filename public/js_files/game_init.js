@@ -28,26 +28,26 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 // enable shadow maps
 renderer.shadowMap.enabled = true;
-// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 // enable hdr settings
-// renderer.physicallyCorrectLights = true;
-// renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.physicallyCorrectLights = true;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
 const container = document.querySelector(".scene"); //<-- our DOM Reference to HTML Div class "scene". 
 container.appendChild(renderer.domElement);
 
 //--------------------- LIGHT SETTINGS -----------------------------------------
-const directionLight = new THREE.DirectionalLight(0xFFFFFF, 2);
+const directionLight = new THREE.DirectionalLight(0xFFFFFF, 10);
 directionLight.position.set(0, 100, 100)
 scene.add(directionLight);
 
 const dirLightHelper = new THREE.DirectionalLightHelper(directionLight, 5)
 scene.add(dirLightHelper)
 
-var ambientLight = new THREE.AmbientLight(0x404040, 6); // soft white light
+var ambientLight = new THREE.AmbientLight(0x404040, 15); // soft white light
 scene.add(ambientLight);
 
-const spotLight = new THREE.SpotLight(0xFFFFFF, 15, 400, 0.9, 1.0, 1.5) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
+const spotLight = new THREE.SpotLight(0xFFFFFF, 100, 400, 0.9, 1.0, 1.5) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
 spotLight.position.set(100, 300, 110)
 spotLight.castShadow = true;
 spotLight.shadow.mapSize.width = 1024;

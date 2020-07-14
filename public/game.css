@@ -28,5 +28,5 @@ canvas{
     background: -moz-linear-gradient( rgb(var(--gradientOne)), rgb(var(--gradientTwo)));  
     background: -ms-linear-gradient( rgb(var(--gradientOne)), rgb(var(--gradientTwo))); 
     background: -o-linear-gradient( rgb(var(--gradientOne)), rgb(var(--gradientTwo))); 
-    background: linear-gradient( rgb(var(--gradientOne)), rgb(var(--gradientTwo))) fixed; 
+    background: linear-gradient( rgb(var(--gradientOne)) 60%, rgb(var(--gradientTwo))) fixed; 
 }
