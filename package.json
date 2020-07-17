@@ -1,5 +1,5 @@
 {
-  "name": "door-probability",
+  "name": "monty-hall-game",
   "version": "1.0.0",
   "description": "A game to test how people learn when provided a game of probabilities with additional unknown factors left open to discovery.",
   "main": "server.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EmanateStudios/UCSD_DoorProbabilityGame.git"
+    "url": "git+https://github.com/EmanateStudios/UCSD_MontyHallGame.git"
   },
   "keywords": [
     "learning",
@@ -21,9 +21,9 @@
   "author": "Emanuel Siu",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/EmanateStudios/UCSD_DoorProbabilityGame/issues"
+    "url": "https://github.com/EmanateStudios/UCSD_MontyHallGame/issues"
   },
-  "homepage": "https://github.com/EmanateStudios/UCSD_DoorProbabilityGame",
+  "homepage": "https://github.com/EmanateStudios/UCSD_MontyHallGame",
   "dependencies": {
     "axios": "^0.19.2",
     "csv-stringify": "^5.5.0",

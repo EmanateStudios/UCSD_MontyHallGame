@@ -1,0 +1,228 @@
+{
+    "asset" : {
+        "copyright" : "EmanateStudios",
+        "generator" : "Khronos glTF Blender I/O v1.2.75",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0,
+                1
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "main"
+        },
+        {
+            "mesh" : 1,
+            "name" : "frame"
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "emissiveFactor" : [
+                0,
+                0,
+                0
+            ],
+            "name" : "Door_MAT",
+            "normalTexture" : {
+                "index" : 0,
+                "texCoord" : 0
+            },
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 1,
+                    "texCoord" : 0
+                },
+                "metallicRoughnessTexture" : {
+                    "index" : 2,
+                    "texCoord" : 0
+                }
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "door_002.016",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        },
+        {
+            "name" : "door_002.021",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 4,
+                        "NORMAL" : 5,
+                        "TEXCOORD_0" : 6
+                    },
+                    "indices" : 7,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "source" : 0
+        },
+        {
+            "source" : 1
+        },
+        {
+            "source" : 2
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/png",
+            "name" : "door_all_open_1001_Normal",
+            "uri" : "door_all_open_1001_Normal.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "door_all_open_1001_BaseColor",
+            "uri" : "door_all_open_1001_BaseColor.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "door_all_open_1001_Metallic-door_all_open_1001_Roughness",
+            "uri" : "door_all_open_1001_Metallic-door_all_open_1001_Roughness.png"
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 4162,
+            "max" : [
+                97.82568359375,
+                200.00001525878906,
+                7.071573734283447
+            ],
+            "min" : [
+                -0.0785369873046875,
+                0,
+                -6.900362014770508
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 4162,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 4162,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 14376,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5126,
+            "count" : 2822,
+            "max" : [
+                103.34217071533203,
+                206.0767822265625,
+                4.880041122436523
+            ],
+            "min" : [
+                -5.7208404541015625,
+                -0.4315420091152191,
+                -8.097670555114746
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5126,
+            "count" : 2822,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 2822,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 7,
+            "componentType" : 5123,
+            "count" : 10488,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 49944,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 49944,
+            "byteOffset" : 49944
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 33296,
+            "byteOffset" : 99888
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 28752,
+            "byteOffset" : 133184
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 33864,
+            "byteOffset" : 161936
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 33864,
+            "byteOffset" : 195800
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 22576,
+            "byteOffset" : 229664
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 20976,
+            "byteOffset" : 252240
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 273216,
+            "uri" : "Door.bin"
+        }
+    ]
+}

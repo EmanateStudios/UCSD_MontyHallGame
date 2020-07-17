@@ -41,20 +41,20 @@ const directionLight = new THREE.DirectionalLight(0xFFFFFF, 10);
 directionLight.position.set(0, 100, 100)
 scene.add(directionLight);
 
-const dirLightHelper = new THREE.DirectionalLightHelper(directionLight, 5)
+const dirLightHelper = new THREE.DirectionalLightHelper(directionLight, 7)
 scene.add(dirLightHelper)
 
-var ambientLight = new THREE.AmbientLight(0x404040, 15); // soft white light
+var ambientLight = new THREE.AmbientLight(0x404040, 35); // soft white light
 scene.add(ambientLight);
 
-const spotLight = new THREE.SpotLight(0xFFFFFF, 100, 400, 0.9, 1.0, 1.5) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
+const spotLight = new THREE.SpotLight(0xFFFFFF, 150, 400, 0.9, 1.0, 1.5) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
 spotLight.position.set(100, 300, 110)
 spotLight.castShadow = true;
 spotLight.shadow.mapSize.width = 1024;
 spotLight.shadow.mapSize.height = 1024;
-spotLight.shadow.camera.near = 0.01;
-spotLight.shadow.camera.far = 10000
-spotLight.shadow.bias = - 0.000001;
+// spotLight.shadow.camera.near = 0.01;
+// spotLight.shadow.camera.far = 10000
+// spotLight.shadow.bias = - 0.000001;
 scene.add(spotLight)
 
 const sphereSize = 20;
@@ -78,6 +78,8 @@ scene.add(floorMesh);
 
 
 //--------------------- 3D ASSET LOADER SETTINGS-----------------------------------
+let MainDoor1, MainDoor2
+let Frame1, Frame2
 const loader = new GLTFLoader();
 let doorMain;
 let doorFrame;
@@ -90,7 +92,19 @@ loader.load(doorGLTF, (gltf) => {
         }
     })
     doorMain = gltf.scene.children[1];
+    MainDoor1 = doorMain.clone();
+    MainDoor2 = doorMain.clone();
+    MainDoor1.position.set(200, 0, 0);
+    MainDoor2.position.set(-200, 0, 0);
+    scene.add(MainDoor1);
+    scene.add(MainDoor2);
     doorFrame = gltf.scene.children[0];
+    Frame1 = doorFrame.clone();
+    Frame2 = doorFrame.clone();
+    Frame1.position.set(200, 0, 0);
+    Frame2.position.set(-200, 0, 0);
+    scene.add(Frame1);
+    scene.add(Frame2);
     loaded = true;
     scene.add(gltf.scene);
     animate(loaded);
@@ -102,6 +116,10 @@ loader.load(doorGLTF, (gltf) => {
         console.error('An error occured. Try again later');
     }
 )
+
+// MainDoor1 = new THREE.Mesh(doorMain.geometry, doorMain.material);
+// MainDoor1.position.set(10, 0, 0);
+// scene.add(MainDoor1);
 
 
 
@@ -143,6 +161,7 @@ const GameClick = (event) => {
 
     // intersects returns array of what is clicked with ray cast
     let intersects = raycaster.intersectObjects(scene.children, true);
+    console.log(intersects);
     intersects.map(item => {
         if (item.object.name === "main") {
             gsap.timeline()
