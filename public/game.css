@@ -9,16 +9,25 @@ body {
     margin:0;
 }
 
+
 canvas{
     display:block;
 }
-.scene {
-    height: 100%;
-    width:100%;
+
+#loader{
+    position: absolute;
+    margin:auto;
 }
 
 .scene{
-    -webkit-background-size: auto;
+    width:90vw;
+    height: calc(90vw * 0.5625);
+    margin:auto;
+    /* border:dotted black 2px; */
+    /* position: absolute; */
+    /* padding-top: 56.25%;
+    width:100%; */
+    /* -webkit-background-size: auto;
     -moz-background-size: auto;
     -o-background-size: auto;
     background-size: auto;
@@ -28,5 +37,6 @@ canvas{
     background: -moz-linear-gradient( rgb(var(--gradientOne)), rgb(var(--gradientTwo)));  
     background: -ms-linear-gradient( rgb(var(--gradientOne)), rgb(var(--gradientTwo))); 
     background: -o-linear-gradient( rgb(var(--gradientOne)), rgb(var(--gradientTwo))); 
-    background: linear-gradient( rgb(var(--gradientOne)) 60%, rgb(var(--gradientTwo))) fixed; 
+    background: linear-gradient( rgb(var(--gradientOne)) 60%, rgb(var(--gradientTwo))) fixed;  */
+    background: '#70bg32';
 }
