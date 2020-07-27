@@ -6,8 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "parcel public/pages/game.html",
-    "dev-build": "parcel build public/pages/game.html -d ./build/",
-    "dev-cache": "parcel build public/pages/game.html --cache-dir cache/"
+    "build": "parcel build public/pages/game.html -d public/js_files/build",
+    "dev-cache": "parcel build public/pages/game.html --cache-dir cache/",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build"
   },
   "repository": {
     "type": "git",
