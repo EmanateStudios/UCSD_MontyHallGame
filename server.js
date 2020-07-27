@@ -357,13 +357,16 @@ app.post('/data/quiz', async (req, res) => {
 // ---SERVE STATIC ASSETS FOR PRODUCTION AND DEV-----
 if (process.env.NODE_ENV === "production") {
 
-    app.use(express.static(path.resolve(__dirname, "build")))
+    // static folder to server
+    app.use(express.static(path.resolve(__dirname, "public")))
 
+    // page to return if anything that doesn't exist.
     // app.get("*", (req, res) => {
-    //     res.sendFile(path.resolve(__dirname, "build", "game.html"));
+    //     res.sendFile(path.resolve(__dirname, "public", "index.html"));
     // })
+
 } else {
-    app.use(express.static(path.resolve(__dirname, "build")))
+    app.use(express.static(path.resolve(__dirname, "public")))
 }
 
 
