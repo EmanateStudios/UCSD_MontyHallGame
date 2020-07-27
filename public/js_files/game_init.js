@@ -5,8 +5,13 @@ import Stats from 'stats.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+// 3D assets to import
 import doorGLTF from '../THREE/Assets/gltf_files/Door.gltf'
 import chestGLTF from '../THREE/Assets/gltf_files/Treasure.gltf'
+// audio assets to import
+import successSound from '../soundFX/quest-game-magic-loot-crate-op.wav'
+import failSound from '../soundFX/small-debris-and-plastic-debri.wav'
+import music from '../soundFX/morning-coffee-easy-listening-.wav'
 //----- CUSTOM FUNCTION IMPORTS
 //----- GSAP IMPORTS
 import gsap from 'gsap';
@@ -22,7 +27,7 @@ import gsap from 'gsap';
 const startingScreen = document.getElementById('loader');
 const manager = new THREE.LoadingManager();
 manager.onStart = (url, itemsLoaded, itemsTotal) => {
-    console.log(`Started loading file: ${url} . Loaded ${itemsLoaded} of ${itemsTotal} files`)
+    // console.log(`Started loading file: ${url} . Loaded ${itemsLoaded} of ${itemsTotal} files`)
 }
 //when finished loading enable game logic and remove black screen
 manager.onLoad = () => {
@@ -57,14 +62,23 @@ manager.onError = (url) => {
 
 
 //--------------------- SCENE SETTINGS -----------------------------------------
+const infoBar = document.getElementById('infoBar');
+const scoreDisplay = document.getElementById('scoreDisplay');
 const scene = new THREE.Scene();
 const container = document.querySelector(".scene"); //<-- our DOM Reference to HTML Div class "scene". 
+
+//--------------------- AUDIO SETTINGS -----------------------------------------
+const listener = new THREE.AudioListener(); //<-- this actually gets added to camera below
+const sound = new THREE.Audio(listener);
+const audioLoader = new THREE.AudioLoader();
+let volume = 0.5
 
 //--------------------- CAMERA SETTINGS -----------------------------------------
 const nearClippingPlane = 0.06
 const farClippingPlane = 10000
 const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, nearClippingPlane, farClippingPlane);
 camera.position.set(0, 80, 250);
+camera.add(listener)
 
 //--------------------- RENDERER SETTINGS -----------------------------------------
 
@@ -72,14 +86,8 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(container.clientWidth, container.clientHeight);
 // enable shadow maps
 renderer.shadowMap.enabled = true;
-// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-// enable hdr settings
-// renderer.physicallyCorrectLights = true;
-// renderer.toneMapping = THREE.ACESFilmicToneMapping;
-
-
+// add to dom
 container.appendChild(renderer.domElement);
-
 // view stats
 let stats
 stats = new Stats();
@@ -127,21 +135,6 @@ addShadows(doorLight_03)
 scene.add(doorLight_03)
 scene.add(doorLight_03.target)
 
-// -----------SPOT LIGHT 2
-const spotLight2 = new THREE.SpotLight(0xFFFFFF, 50, 300, 0.5, 0.8, 2.0) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
-spotLight2.position.set(50, 200, -100)
-addShadows(spotLight2)
-
-
-//------ POINT LIGHT
-// const pointLight = new THREE.PointLight(0xffffff, 5, 160, 1.5); //color, intensity, distance, decay
-// pointLight.position.set(50, 75, -100);
-// scene.add(pointLight);
-
-// const pointLightHelperSize = 25;
-// const pointLightHelper = new THREE.PointLightHelper(pointLight, pointLightHelperSize, 0x000000);
-// scene.add(pointLightHelper);
-
 
 //--------------------- CUSTOM FLOOR SETTINGS-----------------------------------
 var floor = new THREE.PlaneBufferGeometry(2000, 2000);
@@ -161,10 +154,6 @@ const loader = new GLTFLoader(manager);
 var dracoLoader = new DRACOLoader();
 // dracoLoader.setDecoderPath( '/examples/js/libs/draco/' );
 loader.setDRACOLoader(dracoLoader);
-
-// loader.setMimeType("text/plain");
-// manager.setMimeType("text/plain");
-// manager.mimeType
 
 let Door_01, Door_02, Door_03;
 // --LOADING DOOR AND ASSIGNING ALL 3 TO A DOOR GROUP
@@ -198,7 +187,24 @@ loader.load(doorGLTF, (gltf) => {
         console.error(`error for door is: ${err}`);
     }
 )
-//-- LOADING SINGLE TREASURE CHEST
+//----- LOADING SINGLE TREASURE CHEST
+
+// --Treasure Lights
+// spotlight 1
+const treasureLightOne = new THREE.SpotLight(0xFFFFFF, 0, 300, 0.5, 0.8, 2.0) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
+treasureLightOne.position.set(70, 200, 0)
+// spotlight 2
+const treasureLightTwo = new THREE.SpotLight(0xFFFFFF, 0, 300, 0.5, 0.8, 2.0) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
+treasureLightTwo.position.set(-70, 200, 0)
+// assign lights to a group that will rotate around the treasure chest
+let TreasureLightGroup = new THREE.Group();
+TreasureLightGroup.add(treasureLightOne)
+TreasureLightGroup.add(treasureLightTwo)
+TreasureLightGroup.position.set(0, 0, -130)
+scene.add(TreasureLightGroup)
+// keep this group always rotating - only adjust fade on and off
+gsap.timeline().to(TreasureLightGroup.rotation, { duration: 4, y: 6.28, repeat: -1, ease: "none" })
+
 let TreasureChest
 loader.load(chestGLTF, (gltf) => {
     // assign shadow casting and recieving to all meshes in gltf object
@@ -212,9 +218,10 @@ loader.load(chestGLTF, (gltf) => {
     TreasureChest.position.set(0, 0, -120);
     TreasureChest.visible = false;
     scene.add(gltf.scene);
-    spotLight2.target = TreasureChest;
-    scene.add(spotLight2)
-    scene.add(spotLight2.target)
+    treasureLightOne.target = TreasureChest;
+    treasureLightTwo.target = TreasureChest;
+    scene.add(treasureLightOne.target)
+    scene.add(treasureLightTwo.target)
 },
     (xhr) => {
         // this runs as object is loaded. due to multiple files this is handled by loading manager instead that manages all objects
@@ -248,8 +255,22 @@ window.addEventListener("resize", onWindowResize);
 
 
 
-//============================= GAME CONTROL SECTION ====================================
-//---------------------------------------------------------------------------------------
+//============================== GAME LOGIC / CONTROL SECTION ======================================
+//--------------------------------------------------------------------------------------------------
+
+// gameplay variables to track and record
+let score = 0;
+
+
+// -------- REWARD LIGHTS ON / OFF FUNCTION ------
+const rewardLight = () => {
+    gsap.timeline()
+        .to(treasureLightOne, { duration: 2.5, intensity: 40 })
+        .to(treasureLightOne, { duration: 2.5, intensity: 0 })
+    gsap.timeline()
+        .to(treasureLightTwo, { duration: 2.5, intensity: 40 })
+        .to(treasureLightTwo, { duration: 2.5, intensity: 0 })
+}
 
 // -------------------- RAY CAST FOR BUTTON CLICK FUNCTION ------------------
 const raycaster = new THREE.Raycaster();
@@ -260,22 +281,53 @@ const mousePressed = () => {
     timeDown = new Date().getTime();
 }
 
-const moveCamera = (x, y, z, door) => {
-    gsap.timeline({ onComplete: openDoor, onCompleteParams: [door] }).to(camera.position, { duration: 1.5, x, y, z, ease: "Power2.easeInOut" })
-}
-const openDoor = (door) => {
-    gsap.timeline()
-        .to(door.object.rotation, { duration: 1.5, y: 1.8, ease: "circ.inOut" })
-        .to(door.object.rotation, { duration: 1.5, y: 0, ease: "circ.inOut", onComplete: () => { TreasureChest.visible = false } })
-        .to(camera.position, { duration: 1.2, x: 0, y: 80, z: 250 })
+const moveCameraAndDoor = (x, y, z, door) => {
+    // camera starts move, door starts to open, camera reaches end, door reaches end, door closes, camera moves.
+    let cameraAnimation = gsap.timeline()
+    cameraAnimation
+        .to(camera.position, { duration: 1.5, x, y, z, ease: "Power2.easeInOut" })
+        .to(camera.position, { delay: 1.8, duration: 1.2, x: 0, y: 80, z: 250, ease: "Power2.easeInOut" })
+
+    let doorAnimation = gsap.timeline()
+    doorAnimation
+        .to(door.object.rotation, { delay: 0.7, duration: 1.5, y: 1.8, ease: "circ.inOut" })
+        .to(door.object.rotation, {
+            duration: 1.5, y: 0, ease: "circ.inOut", onComplete: () => {
+                TreasureChest.visible = false;
+                container.addEventListener('mouseup', GameClick);
+                container.addEventListener("mousedown", mousePressed);
+            }
+        })
 }
 
 const victoryCheck = (pReward, xPosition) => {
     if (Math.random() <= pReward) {
-        console.log('you won')
-        setTimeout(() => { TreasureChest.visible = true; }, 1500)
-
+        score += 20;
+        scoreDisplay.innerHTML = `Score : ${score}`;
+        setTimeout(() => {
+            audioLoader.load(successSound, (buffer) => {
+                sound.setBuffer(buffer);
+                sound.setLoop(false);
+                sound.setVolume(volume);
+                sound.play();
+            });
+            TreasureChest.visible = true;
+        }, 1000)
+        rewardLight()
+        TreasureLightGroup.position.x = xPosition;
         TreasureChest.position.x = xPosition;
+    }
+    else {
+        setTimeout(() => {
+            audioLoader.load(failSound, (buffer) => {
+                sound.setBuffer(buffer);
+                sound.setLoop(false);
+                sound.setVolume(volume);
+                sound.play();
+            });
+        }, 1000)
+        score -= 10
+        scoreDisplay.innerHTML = `Score : ${score}`;
     }
 }
 const GameClick = (event) => {
@@ -295,18 +347,25 @@ const GameClick = (event) => {
     // handle all the logic depending on what was pressed and for how long
     let intersects = raycaster.intersectObjects(DoorGroup.children, true);
     for (let item of intersects) {
+
         if (item.object.name === "Door_01") {
-            moveCamera(-200, 80, 200, item) //<-- door opens when this is finished
-            victoryCheck(pReward, -200)
+            container.removeEventListener('mouseup', GameClick);
+            container.removeEventListener("mousedown", mousePressed);
+            moveCameraAndDoor(-200, 80, 200, item)
+            victoryCheck(pReward, -200)//<-- 2nd paramter is x position to put chest
             break;
         }
         if (item.object.name === "Door_02") {
-            moveCamera(0, 80, 200, item)
+            container.removeEventListener('mouseup', GameClick);
+            container.removeEventListener("mousedown", mousePressed);
+            moveCameraAndDoor(0, 80, 200, item)
             victoryCheck(pReward, 0)
             break;
         }
         if (item.object.name === "Door_03") {
-            moveCamera(200, 80, 200, item)
+            container.removeEventListener('mouseup', GameClick);
+            container.removeEventListener("mousedown", mousePressed);
+            moveCameraAndDoor(200, 80, 200, item)
             victoryCheck(pReward, 200)
             break;
         }
