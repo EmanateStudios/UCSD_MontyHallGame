@@ -359,11 +359,12 @@ if (process.env.NODE_ENV === "production") {
 
     // static folder to server
     app.use(express.static(path.resolve(__dirname, "build")))
+    app.use(express.static(path.resolve(__dirname, "public")))
 
     // page to return if anything that doesn't exist.
-    // app.get("*", (req, res) => {
-    //     res.sendFile(path.resolve(__dirname, "public", "index.html"));
-    // })
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname, "public", "index.html"));
+    })
 
 } else {
     app.use(express.static(path.resolve(__dirname, "public")))
