@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SET DEFAULT CSS -->
+
+    <link rel="stylesheet" href="../reset.css">
+    <!-- IMPORT OUR OWN STYLES -->
+    <link rel="stylesheet" href="../app.css">
+    <title>UCSD D.O.P.</title>
+    <link rel='icon' href='../favicon.ico' type='image/x-icon' />
+</head>
+
+<body id="gameMenu">
+
+
+    <div class="contentContainer bgGray sideShadows" unselectable="yes" onselectstart="return false;">
+
+        <img src="../irbpic.png" width="150px">
+        <p style="justify-self:center">#101191</p>
+
+        <p style="justify-self:center">UNIVERSITY OF CALIFORNIA, SAN DIEGO CONSENT TO ACT AS A RESEARCH SUBJECT</p>
+        <hr>
+        <br>
+
+        <p>Edward Vul, Ph.D. is conducting a research study to find out more about attention, distraction
+            and learning. You have been asked to participate because you are an undergraduate here at UCSD.
+            There will be approximately 1500 participants in this study this year. The expected duration of
+            the study is 16 years.</p>
+        <p>PROCEDURES. If you agree to participate in this study, the following will happen to you:
+            <br>
+            &emsp;1.&emsp;You will sit at the computer and see displays of letters, words, or pictures.
+            <br>
+            &emsp;2.&emsp;You will try to perceive and remember these stimuli, and respond by pressing keys
+            or saying things in a manner that the computer will describe to you.
+        </p>
+        <p>RISKS. No potential risks or discomforts are anticipated except for the possibility that some
+            tasks may be slightly boring.</p>
+        <p>PAYMENT/REMUNERATION. In consideration of your time and inconvenience, you will receive 1 hour of
+            course credit. The procedures and length of participation will last approximately one hour.</p>
+        <br>
+        <p>RIGHTS. You may call the UCSD Human Research Protection Program at 858-246-4777 to ask about your
+            rights as a research subject or to report research-related problems.</p>
+        <br>
+        <p>BENEFITS. There will be no direct benefit to you from these procedures. However, the investigator
+            may learn more about basic questions pertaining to memory, perception, cognition, and learning.
+            This knowledge may have benefits to society in fields ranging from education to design of
+            airplane cockpits, but these benefits will be indirect.</p>
+        <br>
+        <p>EXPLANATION. The researcher has explained this study to you and answered your questions. If you
+            have questions or research related problems, you may reach Edward Vul at 858-534-4401.</p>
+        <br>
+        <p>VOLUNTARY NATURE OF PARTICIPATION. Participation in research is entirely voluntary. You may
+            refuse to participate or withdraw at any time without penalty.</p>
+        <br>
+        <p>CONFIDENTIALITY. Research records will be kept confidential to the extent allowed by law. As with
+            all research, there is also the possibility of loss of confidentiality. Information from
+            participants will be identified by a study number. The database which relates the study number
+            to a specific subject will be maintained in the study coordinators office.</p>
+        <br>
+        <p>COPY OF CONSENT. You have received a copy of this consent document to keep and a copy of the
+            Experimental Bill of Rights.</p>
+        <br><br>
+        <div style="text-align: center">
+
+            <form id="consent" method="post">
+
+                <label for="firstNameConsent">First name: </label>
+                <input type="text" name="firstName"><br><br>
+                <label for="lastNameConsent">Last name: </label>
+                <input type="text" name="lastName"><br><br>
+                <label for="emailConsent">UCSD email: </label>
+                <input type="email" name="emailConsent"><br><br>
+
+                <input id="sendEmail" class="checkRadio" type="checkbox"> I would like a copy of this consent form
+                emailed to
+                <hr>
+
+                <h2> Please press Next if you consent to the conditions of the IRB form </h2>
+                <button class="dropShadow" type="submit" value="Next">Next</button>
+            </form>
+        </div>
+
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="../js_files/moment-timezones.js"></script>
+    <script src="../js_files/formHandler.js"></script>
+
+</body>
+
+</html>

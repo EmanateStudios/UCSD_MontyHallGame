@@ -1,0 +1,63 @@
+{
+  "name": "monty-hall-game",
+  "version": "1.0.0",
+  "description": "A game to test how people learn when provided a game of probabilities with additional unknown factors left open to discovery.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "parcel public/pages/game.html",
+    "dev-build": "parcel build public/pages/game.html -d ./build/",
+    "dev-cache": "parcel build public/pages/game.html --cache-dir cache/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmanateStudios/UCSD_MontyHallGame.git"
+  },
+  "keywords": [
+    "learning",
+    "data",
+    "game",
+    "predictor",
+    "prediction"
+  ],
+  "author": "Emanuel Siu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EmanateStudios/UCSD_MontyHallGame/issues"
+  },
+  "homepage": "https://github.com/EmanateStudios/UCSD_MontyHallGame",
+  "dependencies": {
+    "@babel/polyfill": "^7.10.4",
+    "axios": "^0.19.2",
+    "cors": "^2.8.5",
+    "csv-stringify": "^5.5.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "gsap": "^3.2.6",
+    "install": "^0.13.0",
+    "moment": "^2.25.0",
+    "node-localstorage": "^2.1.6",
+    "pg": "^8.0.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.6",
+    "sequelize-cli": "^5.5.1",
+    "stats.js": "^0.17.0",
+    "three": "^0.118.3"
+  },
+  "engines": {
+    "npm": "6.13.6",
+    "node": "v10.13.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.1.0",
+    "babel-preset-env": "^1.7.0",
+    "file-loader": "^6.0.0",
+    "gltf-webpack-loader": "^1.0.6",
+    "imports-loader": "^1.1.0",
+    "parcel-bundler": "^1.12.4",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}

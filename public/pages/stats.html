@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SET DEFAULT CSS -->
+
+    <link rel="stylesheet" href="../reset.css">
+    <!-- IMPORT OUR OWN STYLES -->
+    <link rel="stylesheet" href="../app.css">
+    <title>Stats</title>
+    <link rel='icon' href='../favicon.ico' type='image/x-icon' />
+</head>
+<script>
+    // protected route using api token provided in link
+    if (localStorage.getItem("token") == null) {
+        window.location.href = "/pages/statSignIn.html";
+    }
+</script>
+
+<body class="dataContainer">
+
+
+    <div class="singleGridCenter">
+        <div class="duoGrid">
+            <div>
+                <!-- LEFT COLUMN -->
+                <h1>Downloads</h1>
+                <div></div>
+                <div class="duoGrid ShadowNoFill">
+                    <button id='subjects'>Subject</button>
+                    <button id='trials'>Trial</button>
+                    <button id='demographics'>Demographic</button>
+                    <button id='exitInterview'>Exit Interview</button>
+                    <button id='quiz'>Quiz</button>
+                    <button id='completeSubjcets'>100% Subjects</button>
+                </div>
+            </div>
+            <!-- RIGHT GRID -->
+            <div>
+                <h1>Stats</h1>
+
+                <ul class="duoGrid ShadowNoFill">
+                    <h2 class="selfLeft" style="text-decoration: underline">Totals</h2><br>
+                    <li class="selfLeft" id="statSubject">Subjects :</li>
+                    <li class="selfLeft" id="statTrial">Trials :</li>
+                    <li class="selfLeft" id="statDemographic">Demographic :</li>
+                    <li class="selfLeft" id="statExit">Exit Interviews :</li>
+                    <li class="selfLeft" id="statQuiz">Quizes :</li>
+                    <li class="selfLeft" id="statAbandoned">Disqualified Abandoned :</li>
+                    <li class="selfLeft" id="statReloaded">Disqualified Reloaded :</li>
+                    <li class="selfLeft" id="statCompleted">100% completions :</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="../js_files/moment-timezones.js"></script>
+    <script src="../js_files/data.js">
+    </script>
+</body>
+
+</html>

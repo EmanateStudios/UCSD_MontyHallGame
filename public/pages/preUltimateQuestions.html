@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SET DEFAULT CSS -->
+
+    <link rel="stylesheet" href="../reset.css">
+    <!-- IMPORT OUR OWN STYLES -->
+    <link rel="stylesheet" href="../app.css">
+    <title>UCSD-Thank You!</title>
+    <link rel='icon' href='../favicon.ico' type='image/x-icon' />
+</head>
+
+<body id="gameMenu" assignment="version1">
+
+
+    <div class="contentContainer bgGray sideShadows" unselectable="yes" onselectstart="return false;">
+
+        <h1>Final Questions!</h1>
+        <p>We appreciate that you answer the following questions truthfully. You WILL receive your SONA participation
+            credit regardless of your answer choices. </p>
+        <br>
+        <hr>
+        <form id="finalInterview" method="put">
+            <p>I was on task for the duration of the game and did not use my cellphone, watch Netflix, become distracted
+                by
+                something around me, etc.:</p>
+            <input class="checkRadio" class="checkRadio" type="radio" name="q1" value="true"> True
+            <input class="checkRadio" type="radio" name="q1" value="false"> False
+            <br><br>
+            <hr>
+
+            <p>I used the following to play the game:</p>
+            <br>
+            <input class="checkRadio" type="radio" name="q2" value="Mouse"> Mouse
+            <input class="checkRadio" type="radio" name="q2" value="Trackball"> Trackball
+            <input class="checkRadio" type="radio" name="q2" value="Trackpad"> Trackpad
+            <input class="checkRadio" type="radio" name="q2" value="Digital pen and drawing pad"> Digital pen and
+            drawing pad
+            <br><br>
+            <hr>
+            <button type="submit">Submit</button>
+        </form>
+
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="../js_files/moment-timezones.js"></script>
+    <script src="../js_files/formHandler.js">
+    </script>
+
+</body>
+
+</html>
