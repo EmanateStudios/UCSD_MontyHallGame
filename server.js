@@ -358,7 +358,7 @@ app.post('/data/quiz', async (req, res) => {
 if (process.env.NODE_ENV === "production") {
 
     // static folder to server
-    app.use(express.static(path.resolve(__dirname, "public")))
+    app.use(express.static(path.resolve(__dirname, "build")))
 
     // page to return if anything that doesn't exist.
     // app.get("*", (req, res) => {
