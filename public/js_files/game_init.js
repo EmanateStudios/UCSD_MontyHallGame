@@ -276,9 +276,9 @@ const rewardLight = () => {
 const raycaster = new THREE.Raycaster();
 let mouse = new THREE.Vector2();
 
-let timeDown
+let TimeWhenPressed
 const mousePressed = () => {
-    timeDown = new Date().getTime();
+    TimeWhenPressed = new Date().getTime();
 }
 
 const moveCameraAndDoor = (x, y, z, door) => {
@@ -334,9 +334,9 @@ const GameClick = (event) => {
     event.preventDefault();
 
     // handling p(Reward here calculating when mouse was pressed and released);
-    let mouseupTime = new Date().getTime();
-    let timeDifference = mouseupTime - timeDown;
-    let pReward = Math.min(0.8, (0.2 + (timeDifference / 1666))).toFixed(2)
+    let TimeWhenReleased = new Date().getTime();
+    let TimeHeldDown = TimeWhenReleased - TimeWhenPressed;
+    let pReward = Math.min(0.8, (0.2 + (TimeHeldDown / 1666))).toFixed(2)
     console.log(`pReward is: ${pReward}`)
 
     // setting up raycaster
