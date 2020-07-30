@@ -69,28 +69,13 @@ const scene = new THREE.Scene();
 const container = document.querySelector(".scene"); //<-- our DOM Reference to HTML Div class "scene". 
 
 //--------------------- AUDIO SETTINGS -----------------------------------------
+const winSound = new Audio(successSound);
+const loseSound = new Audio(failSound);
+const musicSound = new Audio(music);
+const playSound = (soundToPlay) => {
+    soundToPlay.play();
+}
 
-let listener = new THREE.AudioListener(); //<-- this actually gets added to camera below
-let winSound = new THREE.Audio(listener);
-let loseSound = new THREE.Audio(listener);
-let musicSound = new THREE.Audio(listener);
-let audioLoader = new THREE.AudioLoader();
-let volume = 0.5
-audioLoader.load(failSound, (buffer) => {
-    loseSound.setBuffer(buffer);
-    loseSound.setLoop(false);
-    loseSound.setVolume(volume);
-});
-audioLoader.load(successSound, (buffer) => {
-    winSound.setBuffer(buffer);
-    winSound.setLoop(false);
-    winSound.setVolume(volume);
-});
-audioLoader.load(music, (buffer) => {
-    musicSound.setBuffer(buffer);
-    musicSound.setLoop(true);
-    musicSound.setVolume(volume);
-});
 const musicCheckBox = document.getElementById('music')
 musicCheckBox.addEventListener('change', () => {
     if (musicCheckBox.checked) {
@@ -105,7 +90,6 @@ const nearClippingPlane = 0.06
 const farClippingPlane = 10000
 const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, nearClippingPlane, farClippingPlane);
 camera.position.set(0, 80, 250);
-camera.add(listener)
 
 //--------------------- RENDERER SETTINGS -----------------------------------------
 
@@ -360,7 +344,7 @@ const victoryCheck = (pReward, xPosition) => {
         score += 20;
         scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
         setTimeout(() => {
-            winSound.play();
+            playSound(winSound);
             TreasureChest.visible = true;
         }, 1000)
         rewardLight()
@@ -369,7 +353,7 @@ const victoryCheck = (pReward, xPosition) => {
     }
     else {
         setTimeout(() => {
-            loseSound.play();
+            playSound(loseSound);
         }, 1000)
         score -= 10
         scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
