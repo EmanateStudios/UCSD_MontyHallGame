@@ -39,6 +39,9 @@ manager.onLoad = () => {
             onComplete: () => {
                 container.addEventListener('mouseup', GameClick);
                 container.addEventListener("mousedown", mousePressed);
+                listener = new THREE.AudioListener();
+                sound = new THREE.Audio(listener);
+                audioLoader = new THREE.AudioLoader();
             }
         })
             .to(startButton, {
@@ -68,9 +71,9 @@ const scene = new THREE.Scene();
 const container = document.querySelector(".scene"); //<-- our DOM Reference to HTML Div class "scene". 
 
 //--------------------- AUDIO SETTINGS -----------------------------------------
-const listener = new THREE.AudioListener(); //<-- this actually gets added to camera below
-const sound = new THREE.Audio(listener);
-const audioLoader = new THREE.AudioLoader();
+let listener //<-- this actually gets added to camera below
+let sound
+let audioLoader
 let volume = 0.5
 
 //--------------------- CAMERA SETTINGS -----------------------------------------
@@ -255,12 +258,13 @@ window.addEventListener("resize", onWindowResize);
 
 
 
-//============================== GAME LOGIC / CONTROL SECTION ======================================
-//--------------------------------------------------------------------------------------------------
+//======================================== GAME LOGIC / CONTROL SECTION =================================================
+//-----------------------------------------------------------------------------------------------------------------------
 
 // gameplay variables to track and record
 let score = 0;
-
+// door animation timeline:
+let doorGSAPTimeline = gsap.timeline();
 
 // -------- REWARD LIGHTS ON / OFF FUNCTION ------
 const rewardLight = () => {
@@ -275,10 +279,37 @@ const rewardLight = () => {
 // -------------------- RAY CAST FOR BUTTON CLICK FUNCTION ------------------
 const raycaster = new THREE.Raycaster();
 let mouse = new THREE.Vector2();
+// setting up raycaster
+
+
+let intersects //<---these are the objects that get hit by raycaster during mouse down and up
+
+
+document.onmousemove = (event) => {
+    event.preventDefault();
+
+    raycaster.setFromCamera(mouse, camera);
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    intersects = raycaster.intersectObjects(DoorGroup.children, true);
+}
+
+
 
 let TimeWhenPressed
+let DoorSaveToClose
 const mousePressed = () => {
     TimeWhenPressed = new Date().getTime();
+
+    for (let item of intersects) {
+        if (item.object.name === "Door_01" || item.object.name === "Door_02" || item.object.name === "Door_03") {
+            DoorSaveToClose = item
+            doorGSAPTimeline
+                .clear()
+                .to(item.object.rotation, { duration: 1.5, y: 0.08 })
+            break;
+        }
+    }
 }
 
 const moveCameraAndDoor = (x, y, z, door) => {
@@ -288,8 +319,8 @@ const moveCameraAndDoor = (x, y, z, door) => {
         .to(camera.position, { duration: 1.5, x, y, z, ease: "Power2.easeInOut" })
         .to(camera.position, { delay: 1.8, duration: 1.2, x: 0, y: 80, z: 250, ease: "Power2.easeInOut" })
 
-    let doorAnimation = gsap.timeline()
-    doorAnimation
+    let doorOpenAnimation = gsap.timeline();
+    doorOpenAnimation
         .to(door.object.rotation, { delay: 0.7, duration: 1.5, y: 1.8, ease: "circ.inOut" })
         .to(door.object.rotation, {
             duration: 1.5, y: 0, ease: "circ.inOut", onComplete: () => {
@@ -303,7 +334,7 @@ const moveCameraAndDoor = (x, y, z, door) => {
 const victoryCheck = (pReward, xPosition) => {
     if (Math.random() <= pReward) {
         score += 20;
-        scoreDisplay.innerHTML = `Score : ${score}`;
+        scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
         setTimeout(() => {
             audioLoader.load(successSound, (buffer) => {
                 sound.setBuffer(buffer);
@@ -327,27 +358,25 @@ const victoryCheck = (pReward, xPosition) => {
             });
         }, 1000)
         score -= 10
-        scoreDisplay.innerHTML = `Score : ${score}`;
+        scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
     }
 }
 const GameClick = (event) => {
     event.preventDefault();
 
-    // handling p(Reward here calculating when mouse was pressed and released);
+    // handling p(Reward) here calculating when mouse was pressed and released);
     let TimeWhenReleased = new Date().getTime();
     let TimeHeldDown = TimeWhenReleased - TimeWhenPressed;
     let pReward = Math.min(0.8, (0.2 + (TimeHeldDown / 1666))).toFixed(2)
     console.log(`pReward is: ${pReward}`)
 
-    // setting up raycaster
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-    raycaster.setFromCamera(mouse, camera);
 
     // handle all the logic depending on what was pressed and for how long
-    let intersects = raycaster.intersectObjects(DoorGroup.children, true);
+    intersects = raycaster.intersectObjects(DoorGroup.children, true);
+    //save another door variable to make an animation check at the bottom of this function
+    let currentDoor
     for (let item of intersects) {
-
+        currentDoor = item
         if (item.object.name === "Door_01") {
             container.removeEventListener('mouseup', GameClick);
             container.removeEventListener("mousedown", mousePressed);
@@ -370,6 +399,29 @@ const GameClick = (event) => {
             break;
         }
     }
+    // if a door has been pressed but released away from door
+    if (DoorSaveToClose) {
+        try {
+            if (intersects[0].object.name !== DoorSaveToClose.object.name) {
+                console.log('doors are not the same')
+                doorGSAPTimeline.clear();
+                doorGSAPTimeline.to(DoorSaveToClose.object.rotation, { duration: 1, y: 0.0 })
+                return;
+            } else {
+                console.log('same door');
+                doorGSAPTimeline.clear();
+                return;
+            }
+        } catch (err) {
+            // log error if we want
+        }
+
+        console.log('nothing here')
+        doorGSAPTimeline.clear();
+        doorGSAPTimeline.to(DoorSaveToClose.object.rotation, { duration: 1, y: 0.0 })
+
+    }
+
 
 }
 
