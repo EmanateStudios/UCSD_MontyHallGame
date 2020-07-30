@@ -9,9 +9,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import doorGLTF from '../THREE/Assets/gltf_files/Door.gltf'
 import chestGLTF from '../THREE/Assets/gltf_files/Treasure.gltf'
 // audio assets to import
-import successSound from '../soundFX/quest-game-magic-loot-crate-op.wav'
-import failSound from '../soundFX/small-debris-and-plastic-debri.wav'
-import music from '../soundFX/morning-coffee-easy-listening-.wav'
+// import successSound from '../soundFX/quest-game-magic-loot-crate-op.wav'
+// import failSound from '../soundFX/small-debris-and-plastic-debri.wav'
+// import music from '../soundFX/morning-coffee-easy-listening-.wav'
 //----- CUSTOM FUNCTION IMPORTS
 //----- GSAP IMPORTS
 import gsap from 'gsap';
@@ -69,13 +69,17 @@ const scene = new THREE.Scene();
 const container = document.querySelector(".scene"); //<-- our DOM Reference to HTML Div class "scene". 
 
 //--------------------- AUDIO SETTINGS -----------------------------------------
-const winSound = new Audio(successSound);
-const loseSound = new Audio(failSound);
-const musicSound = new Audio(music);
+// const winSound = new Audio(successSound);
+// const loseSound = new Audio(failSound);
+// const musicSound = new Audio(music);
+const winSound = document.getElementById('winSound');
+const loseSound = document.getElementById('loseSound');
+const musicSound = document.getElementById('musicSound');
+musicSound.loop = true;
+
 const playSound = (soundToPlay) => {
     soundToPlay.play();
 }
-
 const musicCheckBox = document.getElementById('music')
 musicCheckBox.addEventListener('change', () => {
     if (musicCheckBox.checked) {
