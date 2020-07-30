@@ -39,9 +39,7 @@ manager.onLoad = () => {
             onComplete: () => {
                 container.addEventListener('mouseup', GameClick);
                 container.addEventListener("mousedown", mousePressed);
-                listener = new THREE.AudioListener();
-                sound = new THREE.Audio(listener);
-                audioLoader = new THREE.AudioLoader();
+                musicSound.play();
             }
         })
             .to(startButton, {
@@ -71,10 +69,36 @@ const scene = new THREE.Scene();
 const container = document.querySelector(".scene"); //<-- our DOM Reference to HTML Div class "scene". 
 
 //--------------------- AUDIO SETTINGS -----------------------------------------
-let listener //<-- this actually gets added to camera below
-let sound
-let audioLoader
+
+let listener = new THREE.AudioListener(); //<-- this actually gets added to camera below
+let winSound = new THREE.Audio(listener);
+let loseSound = new THREE.Audio(listener);
+let musicSound = new THREE.Audio(listener);
+let audioLoader = new THREE.AudioLoader();
 let volume = 0.5
+audioLoader.load(failSound, (buffer) => {
+    loseSound.setBuffer(buffer);
+    loseSound.setLoop(false);
+    loseSound.setVolume(volume);
+});
+audioLoader.load(successSound, (buffer) => {
+    winSound.setBuffer(buffer);
+    winSound.setLoop(false);
+    winSound.setVolume(volume);
+});
+audioLoader.load(music, (buffer) => {
+    musicSound.setBuffer(buffer);
+    musicSound.setLoop(true);
+    musicSound.setVolume(volume);
+});
+const musicCheckBox = document.getElementById('music')
+musicCheckBox.addEventListener('change', () => {
+    if (musicCheckBox.checked) {
+        musicSound.play();
+    } else {
+        musicSound.pause();
+    }
+})
 
 //--------------------- CAMERA SETTINGS -----------------------------------------
 const nearClippingPlane = 0.06
@@ -336,12 +360,7 @@ const victoryCheck = (pReward, xPosition) => {
         score += 20;
         scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
         setTimeout(() => {
-            audioLoader.load(successSound, (buffer) => {
-                sound.setBuffer(buffer);
-                sound.setLoop(false);
-                sound.setVolume(volume);
-                sound.play();
-            });
+            winSound.play();
             TreasureChest.visible = true;
         }, 1000)
         rewardLight()
@@ -350,12 +369,7 @@ const victoryCheck = (pReward, xPosition) => {
     }
     else {
         setTimeout(() => {
-            audioLoader.load(failSound, (buffer) => {
-                sound.setBuffer(buffer);
-                sound.setLoop(false);
-                sound.setVolume(volume);
-                sound.play();
-            });
+            loseSound.play();
         }, 1000)
         score -= 10
         scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
@@ -400,23 +414,21 @@ const GameClick = (event) => {
         }
     }
     // if a door has been pressed but released away from door
+    // below we check 3 places for release after a door is clicked:
+    // 1) another door, 2)same doog, 3)on nothing
     if (DoorSaveToClose) {
         try {
             if (intersects[0].object.name !== DoorSaveToClose.object.name) {
-                console.log('doors are not the same')
                 doorGSAPTimeline.clear();
                 doorGSAPTimeline.to(DoorSaveToClose.object.rotation, { duration: 1, y: 0.0 })
                 return;
             } else {
-                console.log('same door');
                 doorGSAPTimeline.clear();
                 return;
             }
         } catch (err) {
             // log error if we want
         }
-
-        console.log('nothing here')
         doorGSAPTimeline.clear();
         doorGSAPTimeline.to(DoorSaveToClose.object.rotation, { duration: 1, y: 0.0 })
 
