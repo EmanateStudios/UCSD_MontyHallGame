@@ -8,6 +8,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // 3D assets to import
 import doorGLTF from '../THREE/Assets/gltf_files/Door.gltf'
 import chestGLTF from '../THREE/Assets/gltf_files/Treasure.gltf'
+import rubbleGLTF from '../THREE/Assets/gltf_files/Rubble.gltf'
 // audio assets to import
 // import successSound from '../soundFX/quest-game-magic-loot-crate-op.wav'
 // import failSound from '../soundFX/small-debris-and-plastic-debri.wav'
@@ -39,7 +40,6 @@ manager.onLoad = () => {
             onComplete: () => {
                 container.addEventListener('mouseup', GameClick);
                 container.addEventListener("mousedown", mousePressed);
-                musicSound.play();
             }
         })
             .to(startButton, {
@@ -68,24 +68,26 @@ const scoreDisplay = document.getElementById('scoreDisplay');
 const scene = new THREE.Scene();
 const container = document.querySelector(".scene"); //<-- our DOM Reference to HTML Div class "scene". 
 
+
 //--------------------- AUDIO SETTINGS -----------------------------------------
 // const winSound = new Audio(successSound);
 // const loseSound = new Audio(failSound);
 // const musicSound = new Audio(music);
 const winSound = document.getElementById('winSound');
 const loseSound = document.getElementById('loseSound');
-const musicSound = document.getElementById('musicSound');
-musicSound.loop = true;
+const soundCheckBox = document.getElementById('music')
+const Volume = 1.0
 
 const playSound = (soundToPlay) => {
     soundToPlay.play();
 }
-const musicCheckBox = document.getElementById('music')
-musicCheckBox.addEventListener('change', () => {
-    if (musicCheckBox.checked) {
-        musicSound.play();
+soundCheckBox.addEventListener('change', () => {
+    if (soundCheckBox.checked) {
+        winSound.volume = Volume;
+        loseSound.volume = Volume;
     } else {
-        musicSound.pause();
+        winSound.volume = 0;
+        loseSound.volume = 0;
     }
 })
 
@@ -118,13 +120,13 @@ const addShadows = (light) => {
     light.shadow.bias = - 0.000001;
 }
 //------ "Sun" Light
-const directionLight = new THREE.DirectionalLight(0xFFFFFF, 2);
-directionLight.position.set(-50, 100, 100)
-addShadows(directionLight)
+const directionLight = new THREE.DirectionalLight(0xFFFFFF, 3);
+directionLight.position.set(0, 1, 1)
+// addShadows(directionLight)
 scene.add(directionLight);
 
 // ---hint of ambient light
-var ambientLight = new THREE.AmbientLight(0x404040, 4); // soft white light
+var ambientLight = new THREE.AmbientLight(0x404040, 6); // soft white light
 scene.add(ambientLight);
 
 //------- DOOR SPOT LIGHTS
@@ -136,14 +138,14 @@ addShadows(doorLight_01)
 scene.add(doorLight_01)
 scene.add(doorLight_01.target)
 // middle light
-const doorLight_02 = new THREE.SpotLight(0xFFFFFF, 100, 400, .2, 1.0, 2.0) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
+const doorLight_02 = new THREE.SpotLight(0xFFFFFF, 100, 400, 0.2, 1.0, 2.0) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
 doorLight_02.position.set(0, 370, 80)
 doorLight_02.target.position.set(0, 40, -25)
 addShadows(doorLight_02)
 scene.add(doorLight_02)
 scene.add(doorLight_02.target)
 // right light
-const doorLight_03 = new THREE.SpotLight(0xFFFFFF, 100, 400, .2, 1.0, 2.0) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
+const doorLight_03 = new THREE.SpotLight(0xFFFFFF, 100, 400, 0.2, 1.0, 2.0) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
 doorLight_03.position.set(200, 370, 80)
 doorLight_03.target.position.set(200, 40, -25)
 addShadows(doorLight_03)
@@ -155,7 +157,7 @@ scene.add(doorLight_03.target)
 var floor = new THREE.PlaneBufferGeometry(2000, 2000);
 floor.rotateX(- Math.PI / 2);
 const shadowFloorMat = new THREE.ShadowMaterial();
-shadowFloorMat.opacity = 0.5;
+shadowFloorMat.opacity = 0.1;
 
 var floorMesh = new THREE.Mesh(floor, shadowFloorMat);
 floorMesh.receiveShadow = true;
@@ -170,8 +172,9 @@ var dracoLoader = new DRACOLoader();
 // dracoLoader.setDecoderPath( '/examples/js/libs/draco/' );
 loader.setDRACOLoader(dracoLoader);
 
+//========== LOADING DOOR AND ASSIGNING ALL 3 TO A DOOR GROUP ==========
+
 let Door_01, Door_02, Door_03;
-// --LOADING DOOR AND ASSIGNING ALL 3 TO A DOOR GROUP
 let DoorGroup = new THREE.Group();
 loader.load(doorGLTF, (gltf) => {
     // assign shadow casting and recieving to all meshes in gltf object
@@ -202,8 +205,7 @@ loader.load(doorGLTF, (gltf) => {
         console.error(`error for door is: ${err}`);
     }
 )
-//----- LOADING SINGLE TREASURE CHEST
-
+//=================== LOADING SINGLE TREASURE CHEST ===================
 // --Treasure Lights
 // spotlight 1
 const treasureLightOne = new THREE.SpotLight(0xFFFFFF, 0, 300, 0.5, 0.8, 2.0) //color,intensity,distance,angle(radian),penumbra(0.0-1.0),decay(realistic =2)
@@ -215,7 +217,7 @@ treasureLightTwo.position.set(-70, 200, 0)
 let TreasureLightGroup = new THREE.Group();
 TreasureLightGroup.add(treasureLightOne)
 TreasureLightGroup.add(treasureLightTwo)
-TreasureLightGroup.position.set(0, 0, -130)
+TreasureLightGroup.position.set(0, 0, -70)
 scene.add(TreasureLightGroup)
 // keep this group always rotating - only adjust fade on and off
 gsap.timeline().to(TreasureLightGroup.rotation, { duration: 4, y: 6.28, repeat: -1, ease: "none" })
@@ -230,7 +232,7 @@ loader.load(chestGLTF, (gltf) => {
         }
     })
     TreasureChest = gltf.scene.children[0];
-    TreasureChest.position.set(0, 0, -120);
+    TreasureChest.position.set(0, 0, -60);
     TreasureChest.visible = false;
     scene.add(gltf.scene);
     treasureLightOne.target = TreasureChest;
@@ -246,25 +248,53 @@ loader.load(chestGLTF, (gltf) => {
     }
 )
 
+//===================== LOADING AND POSITIONING RUBBLE =====================
+
+let Rubble;
+loader.load(rubbleGLTF, (gltf) => {
+    // assign shadow casting and recieving to all meshes in gltf object
+    gltf.scene.traverse((node) => {
+        if (node.isMesh) {
+            node.castShadow = true;
+            node.receiveShadow = true;
+        }
+    })
+    Rubble = gltf.scene;
+    Rubble.scale.set(0.6, 0.6, 0.6)
+    Rubble.position.set(0, 0, -55);
+    Rubble.visible = false;
+    scene.add(Rubble);
+},
+    (xhr) => {
+        // this runs as object is loaded. due to multiple files this is handled by loading manager instead that manages all objects
+    },
+    (err) => {
+        console.error(`error for door is: ${err}`);
+    }
+)
+
 
 //--------------------- ORBIT CONTROL SETTINGS -----------------------------------------
 // const controls = new OrbitControls(camera, renderer.domElement);
 
-//------------------ ANIMATE/RUN THE RENDERER ----------------------------
+//============================== ANIMATE/RUN THE RENDERER ==============================
+// ************************ control how window reacts to render ************************
 const animate = () => {
 
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
-    // renderer();
     stats.update();
 
 }
 
 // keep aspect ration when resizing window to fit on any device
+let containerNormalized = container.getBoundingClientRect();
+
 const onWindowResize = () => {
     renderer.setSize(container.clientWidth, container.clientHeight);
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
+    containerNormalized = container.getBoundingClientRect();
 }
 window.addEventListener("resize", onWindowResize);
 
@@ -275,8 +305,6 @@ window.addEventListener("resize", onWindowResize);
 
 // gameplay variables to track and record
 let score = 0;
-// door animation timeline:
-let doorGSAPTimeline = gsap.timeline();
 
 // -------- REWARD LIGHTS ON / OFF FUNCTION ------
 const rewardLight = () => {
@@ -291,52 +319,38 @@ const rewardLight = () => {
 // -------------------- RAY CAST FOR BUTTON CLICK FUNCTION ------------------
 const raycaster = new THREE.Raycaster();
 let mouse = new THREE.Vector2();
-// setting up raycaster
 
-
-let intersects //<---these are the objects that get hit by raycaster during mouse down and up
-
+let intersects //<---these are the objects that get hit by raycaster during mouse move
 
 document.onmousemove = (event) => {
     event.preventDefault();
 
     raycaster.setFromCamera(mouse, camera);
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    mouse.x = (event.clientX / container.clientWidth) * 2 - 1;
+    mouse.y = - ((event.clientY - containerNormalized.top) / container.clientHeight) * 2 + 1;
     intersects = raycaster.intersectObjects(DoorGroup.children, true);
 }
 
-
-
+// ******* MOUSE DOWN PRESS ***********
 let TimeWhenPressed
-let DoorSaveToClose
 const mousePressed = () => {
     TimeWhenPressed = new Date().getTime();
-
-    for (let item of intersects) {
-        if (item.object.name === "Door_01" || item.object.name === "Door_02" || item.object.name === "Door_03") {
-            DoorSaveToClose = item
-            doorGSAPTimeline
-                .clear()
-                .to(item.object.rotation, { duration: 1.5, y: 0.08 })
-            break;
-        }
-    }
 }
 
 const moveCameraAndDoor = (x, y, z, door) => {
-    // camera starts move, door starts to open, camera reaches end, door reaches end, door closes, camera moves.
+    // move camera in
     let cameraAnimation = gsap.timeline()
     cameraAnimation
         .to(camera.position, { duration: 1.5, x, y, z, ease: "Power2.easeInOut" })
         .to(camera.position, { delay: 1.8, duration: 1.2, x: 0, y: 80, z: 250, ease: "Power2.easeInOut" })
-
+    // open door forward then close
     let doorOpenAnimation = gsap.timeline();
     doorOpenAnimation
-        .to(door.object.rotation, { delay: 0.7, duration: 1.5, y: 1.8, ease: "circ.inOut" })
+        .to(door.object.rotation, { delay: 0.7, duration: 1.5, y: -1.8, ease: "circ.inOut" })
         .to(door.object.rotation, {
             duration: 1.5, y: 0, ease: "circ.inOut", onComplete: () => {
                 TreasureChest.visible = false;
+                Rubble.visible = false;
                 container.addEventListener('mouseup', GameClick);
                 container.addEventListener("mousedown", mousePressed);
             }
@@ -344,6 +358,7 @@ const moveCameraAndDoor = (x, y, z, door) => {
 }
 
 const victoryCheck = (pReward, xPosition) => {
+    console.log(`pReward: ${pReward}`)
     if (Math.random() <= pReward) {
         score += 20;
         scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
@@ -357,70 +372,58 @@ const victoryCheck = (pReward, xPosition) => {
     }
     else {
         setTimeout(() => {
+            Rubble.visible = true;
             playSound(loseSound);
         }, 1000)
+        Rubble.position.x = xPosition;
         score -= 10
         scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
     }
 }
+
+
+const pRewardCalc = (yPositionClick) => {
+    if (yPositionClick > 150) { return 0.8 }
+    if (yPositionClick < 150 && yPositionClick > 100) { return 0.6 }
+    if (yPositionClick < 100 && yPositionClick > 50) { return 0.4 }
+    if (yPositionClick < 50) { return 0.2 }
+}
+// ******* MOUSE RELEASED ***********
 const GameClick = (event) => {
     event.preventDefault();
 
     // handling p(Reward) here calculating when mouse was pressed and released);
     let TimeWhenReleased = new Date().getTime();
     let TimeHeldDown = TimeWhenReleased - TimeWhenPressed;
-    let pReward = Math.min(0.8, (0.2 + (TimeHeldDown / 1666))).toFixed(2)
-    console.log(`pReward is: ${pReward}`)
-
+    // let pReward = Math.min(0.8, (0.2 + (TimeHeldDown / 1666))).toFixed(2)
 
     // handle all the logic depending on what was pressed and for how long
     intersects = raycaster.intersectObjects(DoorGroup.children, true);
     //save another door variable to make an animation check at the bottom of this function
-    let currentDoor
     for (let item of intersects) {
-        currentDoor = item
         if (item.object.name === "Door_01") {
             container.removeEventListener('mouseup', GameClick);
             container.removeEventListener("mousedown", mousePressed);
             moveCameraAndDoor(-200, 80, 200, item)
-            victoryCheck(pReward, -200)//<-- 2nd paramter is x position to put chest
+            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), -200)//<-- 2nd paramter is x position to put chest
             break;
         }
         if (item.object.name === "Door_02") {
             container.removeEventListener('mouseup', GameClick);
             container.removeEventListener("mousedown", mousePressed);
             moveCameraAndDoor(0, 80, 200, item)
-            victoryCheck(pReward, 0)
+            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), 0)
             break;
         }
         if (item.object.name === "Door_03") {
             container.removeEventListener('mouseup', GameClick);
             container.removeEventListener("mousedown", mousePressed);
             moveCameraAndDoor(200, 80, 200, item)
-            victoryCheck(pReward, 200)
+            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), 200)
             break;
         }
     }
-    // if a door has been pressed but released away from door
-    // below we check 3 places for release after a door is clicked:
-    // 1) another door, 2)same doog, 3)on nothing
-    if (DoorSaveToClose) {
-        try {
-            if (intersects[0].object.name !== DoorSaveToClose.object.name) {
-                doorGSAPTimeline.clear();
-                doorGSAPTimeline.to(DoorSaveToClose.object.rotation, { duration: 1, y: 0.0 })
-                return;
-            } else {
-                doorGSAPTimeline.clear();
-                return;
-            }
-        } catch (err) {
-            // log error if we want
-        }
-        doorGSAPTimeline.clear();
-        doorGSAPTimeline.to(DoorSaveToClose.object.rotation, { duration: 1, y: 0.0 })
 
-    }
 
 
 }
