@@ -1,10 +1,11 @@
 /* set variable for size multiplier applied to screen size */
 :root {
     --header:222, 188, 144;
-    --gradientOne:222,184,135;
+    --gradientOne:86, 130, 130;
     /* --gradientTwo:189, 148, 96; */
-    --gradientTwo:0, 0, 0;
-    --gradientTwo:156, 112, 56;
+    /* --gradientTwo:0, 0, 0; */
+    /* --gradientTwo:156, 112, 56; */
+    --gradientTwo:38, 102, 102;
 }
 
 body {

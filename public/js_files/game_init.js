@@ -14,11 +14,9 @@ import rubbleGLTF from '../THREE/Assets/gltf_files/Rubble.gltf'
 // import failSound from '../soundFX/small-debris-and-plastic-debri.wav'
 // import music from '../soundFX/morning-coffee-easy-listening-.wav'
 //----- CUSTOM FUNCTION IMPORTS
+import {gameSettings} from './gameSettings.js'
 //----- GSAP IMPORTS
 import gsap from 'gsap';
-
-
-
 
 // THREE.JS NEEDS AT MINIMUM THESE COMPONENTS:
 // 1.)scene,2.) camera,3.) renderer (and animate function to actually utilize it),4.) object (4a: material, 4b: mesh, 4c: textures), 5.) and light(5a: type/intensity/color/properties,5b: shadows)
@@ -70,26 +68,8 @@ const container = document.querySelector(".scene"); //<-- our DOM Reference to H
 
 
 //--------------------- AUDIO SETTINGS -----------------------------------------
-// const winSound = new Audio(successSound);
-// const loseSound = new Audio(failSound);
-// const musicSound = new Audio(music);
-const winSound = document.getElementById('winSound');
-const loseSound = document.getElementById('loseSound');
-const soundCheckBox = document.getElementById('music')
-const Volume = 1.0
 
-const playSound = (soundToPlay) => {
-    soundToPlay.play();
-}
-soundCheckBox.addEventListener('change', () => {
-    if (soundCheckBox.checked) {
-        winSound.volume = Volume;
-        loseSound.volume = Volume;
-    } else {
-        winSound.volume = 0;
-        loseSound.volume = 0;
-    }
-})
+const {playSound, soundControl} = gameSettings
 
 //--------------------- CAMERA SETTINGS -----------------------------------------
 const nearClippingPlane = 0.06
@@ -304,7 +284,8 @@ window.addEventListener("resize", onWindowResize);
 //-----------------------------------------------------------------------------------------------------------------------
 
 // gameplay variables to track and record
-let score = 0;
+let {level, round, score} = gameSettings;
+console.log(`level: ${level}, round: ${round}, score:${score}`)
 
 // -------- REWARD LIGHTS ON / OFF FUNCTION ------
 const rewardLight = () => {
