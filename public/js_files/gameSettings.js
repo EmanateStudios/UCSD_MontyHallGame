@@ -1,4 +1,4 @@
-export let gameAttributes = {
+export let gameSettings = {
     level = 0,
     round = 0,
     score = 0,
@@ -7,7 +7,10 @@ export let gameAttributes = {
         soundToPlay.play()
     },
     soundControl(checkBoxId){
-        const soundCheckBox = document.getElementById('music');
+        if (!checkBoxId){
+            checkBoxId = 'music'
+        }
+        const soundCheckBox = document.getElementById(checkBoxId);
         const SoundListener = soundCheckBox.addEventListener('change',()=>{
             if (soundCheckBox.checked) {
                 winSound.volume = Volume;
@@ -16,7 +19,7 @@ export let gameAttributes = {
                 winSound.volume = 0;
                 loseSound.volume = 0;
             }
-        }
-        
+        });
+        return SoundListener
     }
 }
