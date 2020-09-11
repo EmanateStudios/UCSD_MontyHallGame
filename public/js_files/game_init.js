@@ -61,7 +61,7 @@ manager.onError = (url) => {
 
 
 //--------------------- SCENE SETTINGS -----------------------------------------
-const infoBar = document.getElementById('infoBar');
+const level_round = document.getElementById('level_round');
 const scoreDisplay = document.getElementById('scoreDisplay');
 const scene = new THREE.Scene();
 const container = document.querySelector(".scene"); //<-- our DOM Reference to HTML Div class "scene". 
@@ -70,6 +70,7 @@ const container = document.querySelector(".scene"); //<-- our DOM Reference to H
 //--------------------- AUDIO SETTINGS -----------------------------------------
 
 const {playSound, soundControl} = gameSettings
+soundControl();
 
 //--------------------- CAMERA SETTINGS -----------------------------------------
 const nearClippingPlane = 0.06
@@ -86,9 +87,9 @@ renderer.shadowMap.enabled = true;
 // add to dom
 container.appendChild(renderer.domElement);
 // view stats
-let stats
-stats = new Stats();
-container.appendChild(stats.dom);
+// let stats
+// stats = new Stats();
+// container.appendChild(stats.dom);
 
 //--------------------- LIGHT SETTINGS -----------------------------------------
 const addShadows = (light) => {
@@ -263,7 +264,7 @@ const animate = () => {
 
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
-    stats.update();
+    // stats.update();
 
 }
 
@@ -284,8 +285,8 @@ window.addEventListener("resize", onWindowResize);
 //-----------------------------------------------------------------------------------------------------------------------
 
 // gameplay variables to track and record
-let {level, round, score} = gameSettings;
-console.log(`level: ${level}, round: ${round}, score:${score}`)
+let {currentLevel,totalLevels, currentRound,totalRounds, score,scoreIncrement,scoreDecrement , success} = gameSettings;
+level_round.innerHTML = `Round : ${currentRound}/${totalRounds} `;//<--initialze round text
 
 // -------- REWARD LIGHTS ON / OFF FUNCTION ------
 const rewardLight = () => {
@@ -338,11 +339,15 @@ const moveCameraAndDoor = (x, y, z, door) => {
         })
 }
 
+//***** !!!! victory check also holds level and round logic !!! ***********
 const victoryCheck = (pReward, xPosition) => {
     console.log(`pReward: ${pReward}`)
+    // pReward logic
     if (Math.random() <= pReward) {
-        score += 20;
+        score += scoreIncrement;
+        success = 1;
         scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
+        level_round.innerHTML = `Round : ${currentRound}/${totalRounds} `;
         setTimeout(() => {
             playSound(winSound);
             TreasureChest.visible = true;
@@ -357,9 +362,33 @@ const victoryCheck = (pReward, xPosition) => {
             playSound(loseSound);
         }, 1000)
         Rubble.position.x = xPosition;
-        score -= 10
+        score -= scoreDecrement;
+        success = 0;
         scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
     }
+    // ------- record trial into database ---------
+    let data = {
+        trialIteration: currentLevel,
+        success,
+        subjectId: localStorage.getItem("subject"),
+        score
+    }
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+    }
+    fetch('http://localhost:5000/api/trial', options) //<--actual call to server
+
+    
+    // level logic
+    if (currentLevel <= totalLevels){
+        currentLevel ++;
+    } else {
+        currentLevel = 1; //<-- back to 1 after you reach total levels for the round
+    }
+    // round logic
+
 }
 
 

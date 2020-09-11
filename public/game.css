@@ -53,6 +53,9 @@ canvas{
 #scoreDisplay{
     color:white;
 }
+#level_round{
+    color:white;
+}
 #music{
     color:white;
     position:relative;
