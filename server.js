@@ -9,7 +9,10 @@ const { sequelize, subject, exitInterview, trial, quiz, demographics } = require
 
 const app = express();
 // ------------MIDDLEWARE--------------
-app.use(cors());
+const corsOptions = {
+    origin: 'https://ucsd-mh-game.herokuapp.com/game.html'
+}
+app.use(cors(corsOptions));
 // ------------------------------------------------------
 // we'll allow either json or urlencoded requests
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
@@ -154,7 +157,7 @@ app.post('/auth', async (req, res) => {
 });
 
 //=============== DELETING DATA=====================
-app.delete('/api/trial', async (req, res) => {
+app.delete('/api/trials', async (req, res) => {
     const { subjectId, credentials } = req.body;
 
     if (credentials === process.env.DB_SK) {
