@@ -2,8 +2,8 @@
 :root {
     --sizeMultiplier:0.9;
     --formBackGroundColor: rgba(225,225,225,0.8);
-    --gradientOne:33, 74, 117;
-    --gradientTwo:33, 58, 107;
+    --gradientOne:25, 25, 105;
+    --gradientTwo:153, 131, 50;
     --DataGradientOne:150, 150, 150;
     --DataGradientTwo:255, 255, 255;
     --buttonColorOne:38, 99, 31;

@@ -1,6 +1,6 @@
 //----- animation functions
 let slideOn = (objectToAdd) => {
-    gsap.from(objectToAdd, { duration: 1, y: -10, ease: "power2.in", opacity: 0, stagger: 0.1 })
+    gsap.from(objectToAdd, { duration: 1, y: -10, ease: "Power2.easeInOut", opacity: 0, stagger: 0.1 })
 }
 let slideOff = (objectToRemove) => {
     gsap.to(objectToRemove, { duration: 1, y: 10, ease: "power2.in", opacity: 0 })
