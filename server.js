@@ -9,10 +9,7 @@ const { sequelize, subject, exitInterview, trial, quiz, demographics } = require
 
 const app = express();
 // ------------MIDDLEWARE--------------
-const corsOptions = {
-    origin: 'https://ucsd-mh-game.herokuapp.com/game.html'
-}
-app.use(cors(corsOptions));
+app.use(cors());
 // ------------------------------------------------------
 // we'll allow either json or urlencoded requests
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies

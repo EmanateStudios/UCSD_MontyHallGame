@@ -378,7 +378,7 @@ const victoryCheck = (pReward, xPosition) => {
         body: JSON.stringify(data),
         headers: { 'Content-Type': 'application/json' }
     }
-    fetch('/api/trial', options) //<--actual call to server
+    fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options) //<--actual call to server
 
     
     // level logic
