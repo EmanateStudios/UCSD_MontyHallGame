@@ -282,9 +282,9 @@ button:hover {
     margin:1em 1.5em;
 }
 
-#emptyTrials {
+#emptyTrials, #flushDB {
     background: linear-gradient( to left top, rgb(214, 21, 21), rgb(173, 40, 40)); 
 }
-#emptyTrials:hover {
+#emptyTrials:hover, #flushDB:hover {
     background: linear-gradient( to left top, rgb(var(173, 40, 40)), rgb(214, 21, 21)); 
 }
