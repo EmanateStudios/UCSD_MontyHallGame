@@ -171,6 +171,23 @@ app.delete('/api/trial', async (req, res) => {
         res.status(403).send('Invalid access request');
     }
 });
+app.delete('/api/trial/all', async(req,res)=>{
+    const { credentials } = req.body;
+
+    if (credentials === process.env.DB_SK) {
+        try {
+            // delete ALL entries
+            await trial.destroy({ where: {},truncate:true });
+
+            return res.status(200).send({ msg: "ALL Trials Successfully Removed" })
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
+    } else {
+        res.status(403).send('Invalid access request');
+    }
+})
 app.delete('/api/subject', async (req, res) => {
     const { subjectId, credentials } = req.body;
     if (credentials === process.env.DB_SK) {

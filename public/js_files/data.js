@@ -91,6 +91,25 @@ const DemographicsDownload = new DataToHandle('demographics', '/data/demographic
 const ExitInterviewDownload = new DataToHandle('exitInterview', '/data/exit', "ExitInterviews");
 const QuizDownload = new DataToHandle('quiz', '/data/quiz', "Quizes");
 const CompleteSubjectDownload = new DataToHandle('completeSubjcets', '/data/exit/subjects', "CompletedSubjects");
+const deleteTrials = document.getElementById('emptyTrials');
+
+deleteTrials.addEventListener("click", async () => {
+    try {
+        const options = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ credentials: localStorage.getItem("token") })
+        }
+        if (confirm("!!!-- You will delete all trials --!!! There is no going back if you proceed! ")){
+            const delteResponse = await (await fetch('/api/trial/all', options)).json();
+        }
+        
+    } catch (err) {
+        console.error(err);
+    }
+});
 
 //-------- FILL IN CURRENT STATS------
 const populateStats = async () => {

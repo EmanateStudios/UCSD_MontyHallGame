@@ -281,3 +281,10 @@ button:hover {
     justify-self: start;
     margin:1em 1.5em;
 }
+
+#emptyTrials {
+    background: linear-gradient( to left top, rgb(214, 21, 21), rgb(173, 40, 40)); 
+}
+#emptyTrials:hover {
+    background: linear-gradient( to left top, rgb(var(173, 40, 40)), rgb(214, 21, 21)); 
+}
