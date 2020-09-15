@@ -194,12 +194,12 @@ app.delete('/api/all', async(req,res)=>{
     if (credentials === process.env.DB_SK) {
         try {
             // delete ALL entries
-            subject, exitInterview, trial, quiz, demographics
-            trial.destroy({ where: {},truncate:true });
-            subject.destroy({ where: {},truncate:true });
-            exitInterview.destroy({ where: {},truncate:true });
-            quiz.destroy({ where: {},truncate:true });
-            demographics.destroy({ where: {},truncate:true });
+            // subject, exitInterview, trial, quiz, demographics
+            trial.destroy({ where: {},truncate:{cascade:true} });
+            subject.destroy({ where: {},truncate:{cascade:true} });
+            exitInterview.destroy({ where: {},truncate:{cascade:true} });
+            quiz.destroy({ where: {},truncate:{cascade:true} });
+            demographics.destroy({ where: {},truncate:{cascade:true} });
             return res.status(200).send({ msg: "DB Successfully flushed" })
         } catch (err) {
             console.error(err.message);
