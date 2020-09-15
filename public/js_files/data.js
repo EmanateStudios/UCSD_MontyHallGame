@@ -92,6 +92,7 @@ const ExitInterviewDownload = new DataToHandle('exitInterview', '/data/exit', "E
 const QuizDownload = new DataToHandle('quiz', '/data/quiz', "Quizes");
 const CompleteSubjectDownload = new DataToHandle('completeSubjcets', '/data/exit/subjects', "CompletedSubjects");
 const deleteTrials = document.getElementById('emptyTrials');
+const flushDB = document.getElementById('flushDB');
 
 deleteTrials.addEventListener("click", async () => {
     try {
@@ -104,6 +105,23 @@ deleteTrials.addEventListener("click", async () => {
         }
         if (confirm("!!!-- You will delete all trials --!!! There is no going back if you proceed! ")){
             const delteResponse = await (await fetch('/api/trial/all', options)).json();
+        }
+        
+    } catch (err) {
+        console.error(err);
+    }
+});
+flushDB.addEventListener("click", async () => {
+    try {
+        const options = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ credentials: localStorage.getItem("token") })
+        }
+        if (confirm("!!!-- You will delete the entire database --!!! There is no going back if you proceed! ")){
+            const delteResponse = await (await fetch('/api/all', options)).json();
         }
         
     } catch (err) {

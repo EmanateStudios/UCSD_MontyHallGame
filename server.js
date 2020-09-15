@@ -176,10 +176,31 @@ app.delete('/api/trial/all', async(req,res)=>{
 
     if (credentials === process.env.DB_SK) {
         try {
-            // delete ALL entries
+            // delete all trials entries
             await trial.destroy({ where: {},truncate:true });
 
             return res.status(200).send({ msg: "ALL Trials Successfully Removed" })
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
+    } else {
+        res.status(403).send('Invalid access request');
+    }
+})
+app.delete('/api/all', async(req,res)=>{
+    const { credentials } = req.body;
+
+    if (credentials === process.env.DB_SK) {
+        try {
+            // delete ALL entries
+            subject, exitInterview, trial, quiz, demographics
+            trial.destroy({ where: {},truncate:true });
+            subject.destroy({ where: {},truncate:true });
+            exitInterview.destroy({ where: {},truncate:true });
+            quiz.destroy({ where: {},truncate:true });
+            demographics.destroy({ where: {},truncate:true });
+            return res.status(200).send({ msg: "DB Successfully flushed" })
         } catch (err) {
             console.error(err.message);
             res.status(500).send('Server Error')

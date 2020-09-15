@@ -139,7 +139,7 @@ AllForms.forEach(form => {
                 ) {
                     try {
                         await fetch('/api/quiz', options)
-                        window.location.href = "/pages/game.html";
+                        window.location.href = "/game.html";
                     } catch (err) {
                         console.error(err)
                     }
