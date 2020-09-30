@@ -1,13 +1,14 @@
 export let gameSettings = {
     currentLevel : 1,
-    totalLevels : 20,
+    totalLevels : 2, //<-- production: 20
     currentRound : 1,
-    totalRounds: 6,
+    totalRounds: 2, //<-- production: 6
     score : 0,
     scoreIncrement: 20,
     scoreDecrement: 10,
     subject : '',
     success: 0,
+    isGameOver:false,
     playSound (soundToPlay) {
         soundToPlay.play()
     },

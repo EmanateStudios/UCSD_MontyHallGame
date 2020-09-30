@@ -36,6 +36,7 @@ manager.onLoad = () => {
     const startFunction = () => {
         gsap.timeline({
             onComplete: () => {
+                container.addEventListener('mouseup', ClickLocationTrack)
                 container.addEventListener('mouseup', GameClick);
                 container.addEventListener("mousedown", mousePressed);
             }
@@ -153,10 +154,19 @@ var dracoLoader = new DRACOLoader();
 // dracoLoader.setDecoderPath( '/examples/js/libs/draco/' );
 loader.setDRACOLoader(dracoLoader);
 
+//--------------------- INVISIBLE WALL SETTINGS-----------------------------------
+var wall = new THREE.PlaneBufferGeometry(2000, 2000);
+const wallMaterial = new THREE.MeshBasicMaterial({color:0x00ff00});
+
+var invisibleWallMesh = new THREE.Mesh(wall, wallMaterial);
+invisibleWallMesh.visible = false
+// adding this into door group
+
 //========== LOADING DOOR AND ASSIGNING ALL 3 TO A DOOR GROUP ==========
 
 let Door_01, Door_02, Door_03;
 let DoorGroup = new THREE.Group();
+DoorGroup.add(invisibleWallMesh);
 loader.load(doorGLTF, (gltf) => {
     // assign shadow casting and recieving to all meshes in gltf object
     gltf.scene.traverse((node) => {
@@ -285,8 +295,8 @@ window.addEventListener("resize", onWindowResize);
 //-----------------------------------------------------------------------------------------------------------------------
 
 // gameplay variables to track and record
-let {currentLevel,totalLevels, currentRound,totalRounds, score,scoreIncrement,scoreDecrement , success} = gameSettings;
-level_round.innerHTML = `Round : ${currentRound}/${totalRounds} `;//<--initialze round text
+let {currentLevel,totalLevels, currentRound,totalRounds, score,scoreIncrement,scoreDecrement , success,isGameOver} = gameSettings;
+level_round.innerHTML = `Level : ${currentLevel}/${totalLevels}, Round : ${currentRound}/${totalRounds} `;//<--initialze round text
 
 // -------- REWARD LIGHTS ON / OFF FUNCTION ------
 const rewardLight = () => {
@@ -321,6 +331,7 @@ const mousePressed = () => {
 
 const moveCameraAndDoor = (x, y, z, door) => {
     // move camera in
+    
     let cameraAnimation = gsap.timeline()
     cameraAnimation
         .to(camera.position, { duration: 1.5, x, y, z, ease: "Power2.easeInOut" })
@@ -333,39 +344,63 @@ const moveCameraAndDoor = (x, y, z, door) => {
             duration: 1.5, y: 0, ease: "circ.inOut", onComplete: () => {
                 TreasureChest.visible = false;
                 Rubble.visible = false;
-                container.addEventListener('mouseup', GameClick);
-                container.addEventListener("mousedown", mousePressed);
+                if (!isGameOver){
+                    container.addEventListener('mouseup', GameClick);
+                    container.addEventListener("mousedown", mousePressed);
+                }
             }
         })
+   
 }
 
 //***** !!!! victory check also holds level and round logic !!! ***********
-const victoryCheck = (pReward, xPosition) => {
-    console.log(`pReward: ${pReward}`)
+const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0]) => {
+    const pReward = pr
+
+    console.log(`pReward: ${pReward}, x:${clickCoordinates[0]}, y: ${clickCoordinates[1]}`)
     // pReward logic
-    if (Math.random() <= pReward) {
-        score += scoreIncrement;
-        success = 1;
-        scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
-        level_round.innerHTML = `Round : ${currentRound}/${totalRounds} `;
-        setTimeout(() => {
-            playSound(winSound);
-            TreasureChest.visible = true;
-        }, 1000)
-        rewardLight()
-        TreasureLightGroup.position.x = xPosition;
-        TreasureChest.position.x = xPosition;
+    if (pReward) {
+        console.log('going to handle data')
+        if (Math.random() <= pReward) {
+            score += scoreIncrement;
+            success = 1;
+            scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
+            setTimeout(() => {
+                playSound(winSound);
+                TreasureChest.visible = true;
+            }, 1000)
+            rewardLight()
+            TreasureLightGroup.position.x = xPosition;
+            TreasureChest.position.x = xPosition;
+        }
+        else {
+            setTimeout(() => {
+                Rubble.visible = true;
+                playSound(loseSound);
+            }, 1000)
+            Rubble.position.x = xPosition;
+            score -= scoreDecrement;
+            success = 0;
+            scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
+        }
+        // level & round logic
+        if (currentLevel == totalLevels && currentRound == totalRounds){
+            console.log('game is over')
+            isGameOver = true;
+            container.removeEventListener('mouseup', GameClick);
+            container.removeEventListener("mouseup", ClickLocationTrack);
+            container.removeEventListener("mousedown", mousePressed);
+            level_round.innerHTML = `Level : ${currentLevel}/${totalLevels}, Round : ${currentRound}/${totalRounds}`;
+        } else if (currentLevel == totalLevels){
+            currentLevel = 1; //<-- back to 1 after you reach total levels for the round
+            currentRound ++; //<-- next round
+            level_round.innerHTML = `Level : ${currentLevel}/${totalLevels}, Round : ${currentRound}/${totalRounds}`;
+        } else {
+            currentLevel ++; //<-- next level
+            level_round.innerHTML = `Level : ${currentLevel}/${totalLevels}, Round : ${currentRound}/${totalRounds}`;
+        }
     }
-    else {
-        setTimeout(() => {
-            Rubble.visible = true;
-            playSound(loseSound);
-        }, 1000)
-        Rubble.position.x = xPosition;
-        score -= scoreDecrement;
-        success = 0;
-        scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
-    }
+
     // ------- record trial into database ---------
     let data = {
         trialIteration: currentLevel,
@@ -378,19 +413,16 @@ const victoryCheck = (pReward, xPosition) => {
         body: JSON.stringify(data),
         headers: { 'Content-Type': 'application/json' }
     }
-    fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options) //<--actual call to server
+    // fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options) //<--actual call to server
 
     
-    // level logic
-    if (currentLevel <= totalLevels){
-        currentLevel ++;
-    } else {
-        currentLevel = 1; //<-- back to 1 after you reach total levels for the round
-    }
-    // round logic
-
 }
 
+const ClickLocationTrack = (event) => {
+    event.preventDefault();
+    intersects = raycaster.intersectObjects(DoorGroup.children, true);
+    victoryCheck(null,null , [intersects[0].point.x.toFixed(4),intersects[0].point.y.toFixed(4)])
+}
 
 const pRewardCalc = (yPositionClick) => {
     if (yPositionClick > 150) { return 0.8 }
@@ -410,26 +442,27 @@ const GameClick = (event) => {
     // handle all the logic depending on what was pressed and for how long
     intersects = raycaster.intersectObjects(DoorGroup.children, true);
     //save another door variable to make an animation check at the bottom of this function
+    
     for (let item of intersects) {
         if (item.object.name === "Door_01") {
             container.removeEventListener('mouseup', GameClick);
             container.removeEventListener("mousedown", mousePressed);
             moveCameraAndDoor(-200, 80, 200, item)
-            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), -200)//<-- 2nd paramter is x position to put chest
+            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), -200, [item.point.x.toFixed(4),item.point.y.toFixed(4)])//<-- 2nd paramter is x position to put chest
             break;
         }
         if (item.object.name === "Door_02") {
             container.removeEventListener('mouseup', GameClick);
             container.removeEventListener("mousedown", mousePressed);
             moveCameraAndDoor(0, 80, 200, item)
-            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), 0)
+            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), 0,[item.point.x.toFixed(4),item.point.y.toFixed(4)])
             break;
         }
         if (item.object.name === "Door_03") {
             container.removeEventListener('mouseup', GameClick);
             container.removeEventListener("mousedown", mousePressed);
             moveCameraAndDoor(200, 80, 200, item)
-            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), 200)
+            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), 200,[item.point.x.toFixed(4),item.point.y.toFixed(4)])
             break;
         }
     }
