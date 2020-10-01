@@ -502,7 +502,7 @@ const GameClick = (event) => {
 
 //-------------------------- DISQUALIFICATION PARAMETERS ---------------------------
 // if (!localStorage.getItem("subject")) { window.location.href = "/pages/disqualified.html";}
-if (!localStorage.getItem("subject")) { alert('sorry you cannot be here')}
+if (!localStorage.getItem("subject")) { window.location.href = "/pages/disqualified.html"}
 
 let {hidden, visibilityChange} = disqualificationSettings
 document.addEventListener(visibilityChange, () => {disqualifyAction(isBreak)}, false);

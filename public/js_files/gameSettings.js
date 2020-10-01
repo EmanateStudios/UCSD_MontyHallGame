@@ -64,6 +64,17 @@ export let disqualificationSettings = {
 export const disqualifyAction = (breakBool) =>{
     if (document[hidden]) {
         if(breakBool == false){
+
+                let data = {
+                    subjectId: localStorage.getItem("subject"),
+                    abandonedPage:true,
+                }
+                const options = {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' }
+                }
+                fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options) //<--actual call to server
             
                 let ExitData = {
                     subjectId: parseInt(localStorage.getItem("subject")),
