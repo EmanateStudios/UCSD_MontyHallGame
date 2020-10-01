@@ -430,7 +430,20 @@ const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0],which
         headers: { 'Content-Type': 'application/json' }
     }
     // fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options) //<--actual call to server
-    fetch('http://localhost:5000/api/trial', options) //<--actual call to server
+    fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options) //<--actual call to server
+
+    if (isGameOver) {
+        let ExitData = {
+            subjectId: parseInt(localStorage.getItem("subject")),
+            aborted: false
+        }
+        const ExitOptions = {
+            method: 'POST',
+            body: JSON.stringify(ExitData),
+            headers: { 'Content-Type': 'application/json' }
+        }
+        fetch('/api/exit', ExitOptions)
+    }
 
     
 }

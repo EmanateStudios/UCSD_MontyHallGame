@@ -5,7 +5,7 @@ export let gameSettings = {
     currentLevel : 1,
     totalLevels : 1, //<-- production: 20
     currentRound : 1,
-    totalRounds: 6, //<-- production: 6
+    totalRounds: 2, //<-- production: 6
     score : 0,
     scoreIncrement: 20, 
     scoreDecrement: 10,
@@ -62,14 +62,26 @@ export let disqualificationSettings = {
 }
 
 export const disqualifyAction = (breakBool) =>{
-    console.log(breakBool)
     if (document[hidden]) {
         if(breakBool == false){
-            alert('sorry you are disqualified')
+            
+                let ExitData = {
+                    subjectId: parseInt(localStorage.getItem("subject")),
+                    aborted: true
+                }
+                const ExitOptions = {
+                    method: 'POST',
+                    body: JSON.stringify(ExitData),
+                    headers: { 'Content-Type': 'application/json' }
+                }
+                fetch('http://localhost:5000/api/exit', ExitOptions)
+                window.location.href = "/pages/disqualified.html"
+                alert(`sorry you are disqualified ${parseInt(localStorage.getItem("subject"))}`)
         }
-      } else {
-        console.log('coming back to window')
-      }
+
+    } else {
+    console.log('coming back from break')
+    }
 }
 
 
