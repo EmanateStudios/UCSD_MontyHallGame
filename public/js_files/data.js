@@ -148,7 +148,7 @@ const populateStats = async () => {
         const QuizResponse = await (await fetch('/data/quiz', options)).json();
         document.getElementById('statQuiz').innerHTML = `Quizes : ${QuizResponse.ServerData.length}`;
         const AbandonedResponse = await (await fetch('/data/disqualifiedAbandoned', options)).json();
-        document.getElementById('statAbandoned').innerHTML = `Disqualified Abandoned : ${AbandonedResponse.ServerData.length}`;
+        document.getElementById('statAbandoned').innerHTML = `Disqualified : ${AbandonedResponse.ServerData.length}`;
         // const ReloadedResponse = await (await fetch('/data/disqualifiedReloaded', options)).json();
         // document.getElementById('statReloaded').innerHTML = `Disqualified Reloaded : ${ReloadedResponse.ServerData.length}`;
         const CompleteTrials = await (await fetch('/data/exit/subjects', options)).json();

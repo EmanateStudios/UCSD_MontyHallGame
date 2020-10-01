@@ -391,6 +391,7 @@ const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0],which
 
         if (currentLevel == totalLevels && currentRound == totalRounds){
             // FINISHED WHOLE GAME
+            isBreak = true
             isGameOver = true;
             container.removeEventListener('mouseup', GameClick);
             container.removeEventListener("mouseup", ClickLocationTrack);

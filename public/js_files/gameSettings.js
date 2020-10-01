@@ -156,9 +156,9 @@ export const endScreen = () =>{
     document.body.insertBefore(pauseScreen, infoDiv);
     
     gsap.timeline()
-        .fromTo(pauseScreen,{opacity:0}, {duration: 1.5, opacity: 0.75,
+        .fromTo(pauseScreen,{opacity:0}, {duration: 2, opacity: 0.75,
             onComplete: ()=>{
-                continueButton.addEventListener('mouseup', ()=>{window.location.href = "/pages/exitInterview_1.html"},"+=3")
+                continueButton.addEventListener('mouseup', ()=>{window.location.href = "/pages/exitInterview_1.html"},"+=5")
             }
         })
 }
