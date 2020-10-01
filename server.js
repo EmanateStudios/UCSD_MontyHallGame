@@ -339,7 +339,7 @@ app.post('/data/disqualifiedAbandoned', async (req, res) => {
 
     if (credentials === process.env.DB_SK) {
         try {
-            let ServerData = await trial.findAll({ where: { abandonedPage: true } });
+            let ServerData = await exitInterview.findAll({ where: { aborted: true } });
 
             if (ServerData) {
                 return res.status(200).json({ ServerData })

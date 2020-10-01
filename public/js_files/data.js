@@ -149,8 +149,8 @@ const populateStats = async () => {
         document.getElementById('statQuiz').innerHTML = `Quizes : ${QuizResponse.ServerData.length}`;
         const AbandonedResponse = await (await fetch('/data/disqualifiedAbandoned', options)).json();
         document.getElementById('statAbandoned').innerHTML = `Disqualified Abandoned : ${AbandonedResponse.ServerData.length}`;
-        const ReloadedResponse = await (await fetch('/data/disqualifiedReloaded', options)).json();
-        document.getElementById('statReloaded').innerHTML = `Disqualified Reloaded : ${ReloadedResponse.ServerData.length}`;
+        // const ReloadedResponse = await (await fetch('/data/disqualifiedReloaded', options)).json();
+        // document.getElementById('statReloaded').innerHTML = `Disqualified Reloaded : ${ReloadedResponse.ServerData.length}`;
         const CompleteTrials = await (await fetch('/data/exit/subjects', options)).json();
         document.getElementById('statCompleted').innerHTML = `100% completions : ${CompleteTrials.ServerData.length}`;
         const TrialResponse = await (await fetch('/data/trial', options)).json();

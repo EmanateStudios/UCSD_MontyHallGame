@@ -74,9 +74,10 @@ export const disqualifyAction = (breakBool) =>{
                     body: JSON.stringify(ExitData),
                     headers: { 'Content-Type': 'application/json' }
                 }
-                fetch('http://localhost:5000/api/exit', ExitOptions)
+                fetch('/api/exit', ExitOptions)
+                localStorage.removeItem("subject");
+                localStorage.removeItem("gameVersion");
                 window.location.href = "/pages/disqualified.html"
-                alert(`sorry you are disqualified ${parseInt(localStorage.getItem("subject"))}`)
         }
 
     } else {
