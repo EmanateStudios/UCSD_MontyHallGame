@@ -121,12 +121,12 @@ app.post('/api/quiz', async (req, res) => {
 // CREATE NEW TRIAL ASSIGNED TO SUBJECT
 app.post('/api/trial', async (req, res) => {
 
-    const { trialIteration, score, condition, success, exitDirection, refreshedPage, abandonedPage, subjectId } = req.body;
+    const { trialIteration,round,score,pReward,xClick,yClick,door,success,subjectId,abandonedPage } = req.body;
 
     try {
         // first create new subject
         await trial.create({
-            trialIteration, score, condition, success, exitDirection, refreshedPage, abandonedPage, subjectId
+            trialIteration,round,score,pReward,xClick,yClick,door,success,subjectId,abandonedPage
         });
 
         res.status(200).send({ msg: "Trial Round Successfully" })

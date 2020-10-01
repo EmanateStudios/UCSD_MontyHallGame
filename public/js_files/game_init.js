@@ -1,3 +1,4 @@
+
 import '@babel/polyfill'
 //----- THREE IMPORTS
 import * as THREE from 'three';
@@ -14,9 +15,12 @@ import rubbleGLTF from '../THREE/Assets/gltf_files/Rubble.gltf'
 // import failSound from '../soundFX/small-debris-and-plastic-debri.wav'
 // import music from '../soundFX/morning-coffee-easy-listening-.wav'
 //----- CUSTOM FUNCTION IMPORTS
-import {gameSettings} from './gameSettings.js'
+import {gameSettings, disqualificationSettings,disqualifyAction,breakScreen,endScreen} from './gameSettings.js'
 //----- GSAP IMPORTS
 import gsap from 'gsap';
+
+
+
 
 // THREE.JS NEEDS AT MINIMUM THESE COMPONENTS:
 // 1.)scene,2.) camera,3.) renderer (and animate function to actually utilize it),4.) object (4a: material, 4b: mesh, 4c: textures), 5.) and light(5a: type/intensity/color/properties,5b: shadows)
@@ -295,7 +299,7 @@ window.addEventListener("resize", onWindowResize);
 //-----------------------------------------------------------------------------------------------------------------------
 
 // gameplay variables to track and record
-let {currentLevel,totalLevels, currentRound,totalRounds, score,scoreIncrement,scoreDecrement , success,isGameOver} = gameSettings;
+let {currentLevel,totalLevels,isBreak,breakTime, currentRound,totalRounds, score,scoreIncrement,scoreDecrement , success,isGameOver} = gameSettings;
 level_round.innerHTML = `Level : ${currentLevel}/${totalLevels}, Round : ${currentRound}/${totalRounds} `;//<--initialze round text
 
 // -------- REWARD LIGHTS ON / OFF FUNCTION ------
@@ -354,13 +358,13 @@ const moveCameraAndDoor = (x, y, z, door) => {
 }
 
 //***** !!!! victory check also holds level and round logic !!! ***********
-const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0]) => {
+const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0],whichDoor) => {
     const pReward = pr
 
     console.log(`pReward: ${pReward}, x:${clickCoordinates[0]}, y: ${clickCoordinates[1]}`)
     // pReward logic
     if (pReward) {
-        console.log('going to handle data')
+        
         if (Math.random() <= pReward) {
             score += scoreIncrement;
             success = 1;
@@ -383,19 +387,25 @@ const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0]) => {
             success = 0;
             scoreDisplay.innerHTML = `Your winnings so far : ${score} Gold`;
         }
-        // level & round logic
+        // ---------level & round logic---------
+
         if (currentLevel == totalLevels && currentRound == totalRounds){
-            console.log('game is over')
+            // FINISHED WHOLE GAME
             isGameOver = true;
             container.removeEventListener('mouseup', GameClick);
             container.removeEventListener("mouseup", ClickLocationTrack);
             container.removeEventListener("mousedown", mousePressed);
             level_round.innerHTML = `Level : ${currentLevel}/${totalLevels}, Round : ${currentRound}/${totalRounds}`;
+            endScreen()
         } else if (currentLevel == totalLevels){
+            // NEXT ROUND
+            isBreak = true
+            breakScreen(null,breakTime).then(val => isBreak = val); //<--when animations are done false is resolved from promise and we assign that to isBreak
             currentLevel = 1; //<-- back to 1 after you reach total levels for the round
             currentRound ++; //<-- next round
             level_round.innerHTML = `Level : ${currentLevel}/${totalLevels}, Round : ${currentRound}/${totalRounds}`;
         } else {
+            // NEXT LEVEL
             currentLevel ++; //<-- next level
             level_round.innerHTML = `Level : ${currentLevel}/${totalLevels}, Round : ${currentRound}/${totalRounds}`;
         }
@@ -404,9 +414,15 @@ const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0]) => {
     // ------- record trial into database ---------
     let data = {
         trialIteration: currentLevel,
+        round:currentRound,
+        score,
+        pReward,
+        xClick:clickCoordinates[0],
+        yClick:clickCoordinates[1],
+        door: whichDoor,
         success,
         subjectId: localStorage.getItem("subject"),
-        score
+        abandonedPage:false,
     }
     const options = {
         method: 'POST',
@@ -414,6 +430,7 @@ const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0]) => {
         headers: { 'Content-Type': 'application/json' }
     }
     // fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options) //<--actual call to server
+    fetch('http://localhost:5000/api/trial', options) //<--actual call to server
 
     
 }
@@ -448,26 +465,31 @@ const GameClick = (event) => {
             container.removeEventListener('mouseup', GameClick);
             container.removeEventListener("mousedown", mousePressed);
             moveCameraAndDoor(-200, 80, 200, item)
-            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), -200, [item.point.x.toFixed(4),item.point.y.toFixed(4)])//<-- 2nd paramter is x position to put chest
+            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), -200, [item.point.x.toFixed(4),item.point.y.toFixed(4)],1)//<-- 2nd paramter is x position to put chest
             break;
         }
         if (item.object.name === "Door_02") {
             container.removeEventListener('mouseup', GameClick);
             container.removeEventListener("mousedown", mousePressed);
             moveCameraAndDoor(0, 80, 200, item)
-            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), 0,[item.point.x.toFixed(4),item.point.y.toFixed(4)])
+            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), 0,[item.point.x.toFixed(4),item.point.y.toFixed(4)],2)
             break;
         }
         if (item.object.name === "Door_03") {
             container.removeEventListener('mouseup', GameClick);
             container.removeEventListener("mousedown", mousePressed);
             moveCameraAndDoor(200, 80, 200, item)
-            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), 200,[item.point.x.toFixed(4),item.point.y.toFixed(4)])
+            victoryCheck(pRewardCalc(item.point.y.toFixed(4)), 200,[item.point.x.toFixed(4),item.point.y.toFixed(4)],3)
             break;
         }
     }
 
-
-
 }
+
+//-------------------------- DISQUALIFICATION PARAMETERS ---------------------------
+// if (!localStorage.getItem("subject")) { window.location.href = "/pages/disqualified.html";}
+if (!localStorage.getItem("subject")) { alert('sorry you cannot be here')}
+
+let {hidden, visibilityChange} = disqualificationSettings
+document.addEventListener(visibilityChange, () => {disqualifyAction(isBreak)}, false);
 

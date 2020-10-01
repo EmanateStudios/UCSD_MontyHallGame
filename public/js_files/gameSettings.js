@@ -1,14 +1,19 @@
+//----- GSAP IMPORTS
+import gsap from 'gsap';
+
 export let gameSettings = {
     currentLevel : 1,
-    totalLevels : 2, //<-- production: 20
+    totalLevels : 1, //<-- production: 20
     currentRound : 1,
-    totalRounds: 2, //<-- production: 6
+    totalRounds: 6, //<-- production: 6
     score : 0,
-    scoreIncrement: 20,
+    scoreIncrement: 20, 
     scoreDecrement: 10,
     subject : '',
     success: 0,
     isGameOver:false,
+    isBreak:false,
+    breakTime:5000, //<---production:20000 (in milliseconds)
     playSound (soundToPlay) {
         soundToPlay.play()
     },
@@ -38,3 +43,140 @@ export let gameSettings = {
         return SoundListener
     }
 }
+
+let hidden, visibilityChange; 
+    if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+      hidden = "hidden";
+      visibilityChange = "visibilitychange";
+    } else if (typeof document.msHidden !== "undefined") {
+      hidden = "msHidden";
+      visibilityChange = "msvisibilitychange";
+    } else if (typeof document.webkitHidden !== "undefined") {
+      hidden = "webkitHidden";
+      visibilityChange = "webkitvisibilitychange";
+    }
+
+export let disqualificationSettings = {
+    hidden,
+    visibilityChange
+}
+
+export const disqualifyAction = (breakBool) =>{
+    console.log(breakBool)
+    if (document[hidden]) {
+        if(breakBool == false){
+            alert('sorry you are disqualified')
+        }
+      } else {
+        console.log('coming back to window')
+      }
+}
+
+
+
+export const breakScreen = async (finalAction,timeToDelay) =>{
+
+    return new Promise((resolve,reject) =>{
+
+        const pauseScreen = document.createElement("div");
+        pauseScreen.setAttribute('id','loader');
+    
+        const continueButton = document.createElement("BUTTON");
+    
+        pauseScreen.appendChild(continueButton)
+        continueButton.innerHTML = `${timeToDelay/1000} seconds left in break`;
+    
+        // add the newly created element and its content into the DOM 
+        const infoDiv = document.getElementById("infoBar"); 
+        document.body.insertBefore(pauseScreen, infoDiv);
+        
+        const fadeOutPauseScreen = (actionOnComplete) =>{
+            gsap.timeline({
+                onComplete: () => {actionOnComplete}
+                })
+                .to(continueButton, {
+                    duration: 1.5, scale: 1.1, opacity: 0, onComplete: () => {
+                        continueButton.removeEventListener('mouseup', fadeOutPauseScreen)
+                        continueButton.remove()
+                    }
+                })
+                .to(pauseScreen, { duration: 1.5, opacity: 0, onComplete: () => { 
+                    pauseScreen.remove()
+                    resolve(false) //<-- this tells isBreak to turn false, effectively re-enabline disqualification
+                }}, "-=1.0")
+        }
+        gsap.timeline({
+            onComplete: () => { finalAction}
+            })
+            .fromTo(pauseScreen,{opacity:0}, {duration: 1.5, opacity: 0.75,
+                onComplete: ()=>{
+                    let timeLeft = 0
+                    const timerBySecond = () => {
+                        if (timeLeft < timeToDelay) {
+                            timeLeft += 1000;
+                            continueButton.innerHTML = `${(timeToDelay - timeLeft) / 1000} seconds left in break`;
+                        } else {
+                            clearInterval(timer);
+                            continueButton.innerHTML = "continue";
+                            continueButton.addEventListener('mouseup', fadeOutPauseScreen)
+                        }
+                    }
+                    const timer = setInterval(timerBySecond, 1000)
+                } },"+=3")
+
+    })
+
+    
+}
+
+export const endScreen = () =>{
+    const pauseScreen = document.createElement("div");
+    pauseScreen.setAttribute('id','loader');
+    
+    const continueButton = document.createElement("BUTTON");
+
+    pauseScreen.appendChild(continueButton)
+    continueButton.innerHTML = `Thanks for playing! Click here to continue`;
+
+    // add the newly created element and its content into the DOM 
+    const infoDiv = document.getElementById("infoBar"); 
+    document.body.insertBefore(pauseScreen, infoDiv);
+    
+    gsap.timeline()
+        .fromTo(pauseScreen,{opacity:0}, {duration: 1.5, opacity: 0.75,
+            onComplete: ()=>{
+                continueButton.addEventListener('mouseup', ()=>{window.location.href = "/pages/exitInterview_1.html"},"+=3")
+            }
+        })
+}
+// buttonGroup.addEventListener("mousedown", () => { window.location.href = "/pages/exitInterview_1.html" });
+
+
+
+
+// // check if subject went through forms first. Or if disqualified can't return to game.
+// if (!localStorage.getItem("subject")) {
+//     window.location.href = "/pages/disqualified.html";
+// }
+
+// // check if page focus is lost
+// const disqualifyBackToStart = async () => {
+//     //if they get a perfect round or play to the end then don't delete
+//     if (currentRound !== numberOfRounds && level !== numberOfLevels) {
+//         let data = {
+//             refreshedPage: performance.navigation.type == 1 ? true : false,
+//             abandonedPage: performance.navigation.type == 1 ? false : true,
+//             subjectId: parseInt(localStorage.getItem("subject"))
+//         }
+//         const options = {
+//             method: 'POST',
+//             body: JSON.stringify(data),
+//             headers: { 'Content-Type': 'application/json' }
+//         }
+//         await fetch('/api/trial', options)
+//         // previous versions delete data. Now we just redirect.
+//         localStorage.removeItem("subject");
+//         localStorage.removeItem("gameVersion");
+//         window.location.href = "/pages/disqualified.html";
+//     }
+// }

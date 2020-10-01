@@ -2,10 +2,13 @@
 module.exports = (sequelize, DataTypes) => {
   const trial = sequelize.define('trial', {
     trialIteration: DataTypes.INTEGER,
+    round: DataTypes.INTEGER,
     score: DataTypes.INTEGER,
-    condition: DataTypes.INTEGER,
+    pReward: DataTypes.FLOAT,
+    xClick: DataTypes.FLOAT,
+    yClick:DataTypes.FLOAT,
+    door:DataTypes.INTEGER,
     success: DataTypes.INTEGER,
-    refreshedPage: DataTypes.BOOLEAN,
     abandonedPage: DataTypes.BOOLEAN,
   }, {});
   trial.associate = function (models) {
