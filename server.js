@@ -339,7 +339,7 @@ app.post('/data/disqualifiedAbandoned', async (req, res) => {
 
     if (credentials === process.env.DB_SK) {
         try {
-            let ServerData = await exitInterview.findAll({ where: { aborted: true } });
+            let ServerData = await trial.findAll({ where: { abandonedPage: true } });
 
             if (ServerData) {
                 return res.status(200).json({ ServerData })
@@ -421,7 +421,7 @@ sequelize
     });
 
 // UNCOMMENT TO FLUSH DB
-sequelize.sync({ force: true });
+sequelize.sync({ alter: true });
 
 // // //-------------------GET PORT TO LISTEN ON-----------------
 const PORT = process.env.PORT || 5000;
