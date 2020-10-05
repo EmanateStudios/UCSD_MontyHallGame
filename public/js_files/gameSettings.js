@@ -3,9 +3,9 @@ import gsap from 'gsap';
 
 export let gameSettings = {
     currentLevel : 1,
-    totalLevels : 2, //<-- production: 20
+    totalLevels : 3, //<-- production: 20
     currentRound : 1,
-    totalRounds: 3, //<-- production: 6
+    totalRounds: 4, //<-- production: 6
     score : 0,
     scoreIncrement: 20, 
     scoreDecrement: 10,
@@ -13,7 +13,7 @@ export let gameSettings = {
     success: 0,
     isGameOver:false,
     isBreak:false,
-    breakTime:10000, //<---production:20000 (in milliseconds)
+    breakTime:5000, //<---production:20000 (in milliseconds)
     playSound (soundToPlay) {
         soundToPlay.play()
     },
@@ -76,16 +76,16 @@ export const disqualifyAction = (breakBool) =>{
                 }
                 fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options) //<--actual call to server
             
-                let ExitData = {
-                    subjectId: parseInt(localStorage.getItem("subject")),
-                    aborted: true
-                }
-                const ExitOptions = {
-                    method: 'POST',
-                    body: JSON.stringify(ExitData),
-                    headers: { 'Content-Type': 'application/json' }
-                }
-                fetch('/api/exit', ExitOptions)
+                // let ExitData = {
+                //     subjectId: parseInt(localStorage.getItem("subject")),
+                //     aborted: true
+                // }
+                // const ExitOptions = {
+                //     method: 'POST',
+                //     body: JSON.stringify(ExitData),
+                //     headers: { 'Content-Type': 'application/json' }
+                // }
+                // fetch('/api/exit', ExitOptions)
                 localStorage.removeItem("subject");
                 localStorage.removeItem("gameVersion");
                 window.location.href = "/pages/disqualified.html"
