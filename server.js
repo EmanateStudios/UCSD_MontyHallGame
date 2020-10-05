@@ -421,7 +421,7 @@ sequelize
     });
 
 // UNCOMMENT TO FLUSH DB
-sequelize.sync({ alter: true });
+sequelize.sync({ force: true });
 
 // // //-------------------GET PORT TO LISTEN ON-----------------
 const PORT = process.env.PORT || 5000;
