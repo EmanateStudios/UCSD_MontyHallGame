@@ -2,12 +2,12 @@
 import gsap from 'gsap';
 
 export let gameSettings = {
-    currentLevel : 0,
+    currentLevel : 1,
     totalLevels : 3, //<-- production: 20
-    currentRound : 0,
+    currentRound : 1,
     totalRounds: 4, //<-- production: 6
     score : 0,
-    trialIteration:0,
+    trialIteration:1,
     scoreIncrement: 20, 
     scoreDecrement: 10,
     subject : '',

@@ -356,15 +356,40 @@ const moveCameraAndDoor = (x, y, z, door) => {
    
 }
 
+const recordDataToDatabase = async(pr = null,clickCoordinates = [0,0],whichDoor = 0) =>{
+    return new Promise((resolve,reject) =>{
+        const pReward = pr
+        console.log(`pReward: ${pReward || 'no reward'}, TI: ${trialIteration}`)
+        // ------- record trial into database ---------
+        let data = {
+            trialIteration ,
+            level: currentLevel,
+            round:currentRound,
+            score,
+            pReward,
+            xClick:clickCoordinates[0],
+            yClick:clickCoordinates[1],
+            door: whichDoor,
+            success: pReward ? success : null,
+            subjectId: localStorage.getItem("subject"),
+            abandonedPage:false,
+        }
+        const options = {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        }
+        // fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options) //<--actual call to server
+        // fetch('http://localhost:5000/api/trial', options).then(()=>{resolve()}) //<--actual call to server
+        fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options).then(()=>{resolve()}) //<--actual call to server
+    })
+}
 //***** !!!! victory check also holds level and round logic !!! ***********
-const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0],whichDoor) => {
+const victoryCheck = async (pr = null, xPosition = null,clickCoordinates = [0,0],whichDoor = 0) => {
     const pReward = pr
-
     
     //------- pReward logic to take if it is not null ---------
     if (pReward) {
-
-        trialIteration ++;
 
         if (Math.random() <= pReward) {
             score += scoreIncrement;
@@ -391,7 +416,9 @@ const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0],which
         // ---------level & round logic---------
 
         if (currentLevel == totalLevels && currentRound == totalRounds){
-            // FINISHED WHOLE GAME
+            // first record
+            recordDataToDatabase(pReward,clickCoordinates,whichDoor);
+            // FINISHED WHOLE GAME AND GAME OVER
             isBreak = true
             isGameOver = true;
             container.removeEventListener('mouseup', GameClick);
@@ -400,40 +427,25 @@ const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0],which
             level_round.innerHTML = `Level : ${currentLevel}/${totalLevels}, Round : ${currentRound}/${totalRounds}`;
             endScreen()
         } else if (currentLevel == totalLevels){
+            // first record
+            await recordDataToDatabase(pReward,clickCoordinates,whichDoor);
             // NEXT ROUND
             isBreak = true //<-- seems useless but it disables disqualification momentarily until the following line returns it to false when break is over.
             breakScreen(null,breakTime).then(val => isBreak = val); //<--when animations are done false is resolved from promise and we assign that to isBreak
             currentLevel = 1; //<-- back to 1 after you reach total levels for the round
             currentRound ++; //<-- next round
+            trialIteration ++;
             level_round.innerHTML = `Level : ${currentLevel}/${totalLevels}, Round : ${currentRound}/${totalRounds}`;
         } else {
+            // first record
+            await recordDataToDatabase(pReward,clickCoordinates,whichDoor);
             // NEXT LEVEL
             currentLevel ++; //<-- next level
+            trialIteration ++;
             level_round.innerHTML = `Level : ${currentLevel}/${totalLevels}, Round : ${currentRound}/${totalRounds}`;
         }
     }
-    console.log(`pReward: ${pReward}, TI: ${trialIteration}`)
-    // ------- record trial into database ---------
-    let data = {
-        trialIteration ,
-        level: currentLevel,
-        round:currentRound,
-        score,
-        pReward,
-        xClick:clickCoordinates[0],
-        yClick:clickCoordinates[1],
-        door: whichDoor,
-        success,
-        subjectId: localStorage.getItem("subject"),
-        abandonedPage:false,
-    }
-    const options = {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' }
-    }
-    // fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options) //<--actual call to server
-    fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options) //<--actual call to server
+    
 
     if (isGameOver) {
         let ExitData = {
@@ -454,7 +466,8 @@ const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0],which
 const ClickLocationTrack = (event) => {
     event.preventDefault();
     intersects = raycaster.intersectObjects(DoorGroup.children, true);
-    victoryCheck(null,null , [intersects[0].point.x.toFixed(4),intersects[0].point.y.toFixed(4)])
+    // victoryCheck(null,null , [intersects[0].point.x.toFixed(4), intersects[0].point.y.toFixed(4)]) 
+    recordDataToDatabase(null,[intersects[0].point.x.toFixed(4), intersects[0].point.y.toFixed(4)]);
 }
 
 const pRewardCalc = (yPositionClick) => {
