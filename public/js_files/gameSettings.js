@@ -3,9 +3,9 @@ import gsap from 'gsap';
 
 export let gameSettings = {
     currentLevel : 1,
-    totalLevels : 3, //<-- production: 20
+    totalLevels : 20, //<-- production: 20
     currentRound : 1,
-    totalRounds: 4, //<-- production: 6
+    totalRounds: 6, //<-- production: 6
     score : 0,
     trialIteration:1,
     scoreIncrement: 20, 
@@ -14,7 +14,7 @@ export let gameSettings = {
     success: 0,
     isGameOver:false,
     isBreak:false,
-    breakTime:5000, //<---production:20000 (in milliseconds)
+    breakTime:20000, //<---production:20000 (in milliseconds)
     playSound (soundToPlay) {
         soundToPlay.play()
     },
