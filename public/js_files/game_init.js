@@ -30,7 +30,6 @@ import gsap from 'gsap';
 const startingScreen = document.getElementById('loader');
 const manager = new THREE.LoadingManager();
 manager.onStart = (url, itemsLoaded, itemsTotal) => {
-    // console.log(`Started loading file: ${url} . Loaded ${itemsLoaded} of ${itemsTotal} files`)
 }
 //when finished loading enable game logic and remove black screen
 manager.onLoad = () => {
@@ -299,7 +298,7 @@ window.addEventListener("resize", onWindowResize);
 //-----------------------------------------------------------------------------------------------------------------------
 
 // gameplay variables to track and record
-let {currentLevel,totalLevels,isBreak,breakTime, currentRound,totalRounds, score,scoreIncrement,scoreDecrement , success,isGameOver} = gameSettings;
+let {currentLevel,trialIteration,totalLevels,isBreak,breakTime, currentRound,totalRounds, score,scoreIncrement,scoreDecrement , success,isGameOver} = gameSettings;
 level_round.innerHTML = `Level : ${currentLevel}/${totalLevels}, Round : ${currentRound}/${totalRounds} `;//<--initialze round text
 
 // -------- REWARD LIGHTS ON / OFF FUNCTION ------
@@ -361,10 +360,12 @@ const moveCameraAndDoor = (x, y, z, door) => {
 const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0],whichDoor) => {
     const pReward = pr
 
-    console.log(`pReward: ${pReward}, x:${clickCoordinates[0]}, y: ${clickCoordinates[1]}`)
-    // pReward logic
+    
+    //------- pReward logic to take if it is not null ---------
     if (pReward) {
-        
+
+        trialIteration ++;
+
         if (Math.random() <= pReward) {
             score += scoreIncrement;
             success = 1;
@@ -400,7 +401,7 @@ const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0],which
             endScreen()
         } else if (currentLevel == totalLevels){
             // NEXT ROUND
-            isBreak = true
+            isBreak = true //<-- seems useless but it disables disqualification momentarily until the following line returns it to false when break is over.
             breakScreen(null,breakTime).then(val => isBreak = val); //<--when animations are done false is resolved from promise and we assign that to isBreak
             currentLevel = 1; //<-- back to 1 after you reach total levels for the round
             currentRound ++; //<-- next round
@@ -411,10 +412,11 @@ const victoryCheck = (pr = null, xPosition = null,clickCoordinates = [0,0],which
             level_round.innerHTML = `Level : ${currentLevel}/${totalLevels}, Round : ${currentRound}/${totalRounds}`;
         }
     }
-
+    console.log(`pReward: ${pReward}, TI: ${trialIteration}`)
     // ------- record trial into database ---------
     let data = {
-        trialIteration: currentLevel,
+        trialIteration ,
+        level: currentLevel,
         round:currentRound,
         score,
         pReward,
@@ -456,10 +458,8 @@ const ClickLocationTrack = (event) => {
 }
 
 const pRewardCalc = (yPositionClick) => {
-    if (yPositionClick > 150) { return 0.8 }
-    if (yPositionClick < 150 && yPositionClick > 100) { return 0.6 }
-    if (yPositionClick < 100 && yPositionClick > 50) { return 0.4 }
-    if (yPositionClick < 50) { return 0.2 }
+    if (yPositionClick > 100) { return 0.8 }
+    if (yPositionClick <= 100) { return 0.2 }
 }
 // ******* MOUSE RELEASED ***********
 const GameClick = (event) => {

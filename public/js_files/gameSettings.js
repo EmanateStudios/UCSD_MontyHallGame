@@ -7,6 +7,7 @@ export let gameSettings = {
     currentRound : 1,
     totalRounds: 4, //<-- production: 6
     score : 0,
+    trialIteration:0,
     scoreIncrement: 20, 
     scoreDecrement: 10,
     subject : '',
@@ -76,16 +77,6 @@ export const disqualifyAction = (breakBool) =>{
                 }
                 fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options) //<--actual call to server
             
-                // let ExitData = {
-                //     subjectId: parseInt(localStorage.getItem("subject")),
-                //     aborted: true
-                // }
-                // const ExitOptions = {
-                //     method: 'POST',
-                //     body: JSON.stringify(ExitData),
-                //     headers: { 'Content-Type': 'application/json' }
-                // }
-                // fetch('/api/exit', ExitOptions)
                 localStorage.removeItem("subject");
                 localStorage.removeItem("gameVersion");
                 window.location.href = "/pages/disqualified.html"
@@ -120,7 +111,7 @@ export const breakScreen = async (finalAction,timeToDelay) =>{
                 })
                 .to(continueButton, {
                     duration: 1.5, scale: 1.1, opacity: 0, onComplete: () => {
-                        continueButton.removeEventListener('mouseup', fadeOutPauseScreen)
+                        // continueButton.removeEventListener('mouseup', fadeOutPauseScreen)
                         continueButton.remove()
                     }
                 })
@@ -129,6 +120,7 @@ export const breakScreen = async (finalAction,timeToDelay) =>{
                     resolve(false) //<-- this tells isBreak to turn false, effectively re-enabline disqualification
                 }}, "-=1.0")
         }
+
         gsap.timeline({
             onComplete: () => { finalAction}
             })
@@ -141,8 +133,9 @@ export const breakScreen = async (finalAction,timeToDelay) =>{
                             continueButton.innerHTML = `${(timeToDelay - timeLeft) / 1000} seconds left in break`;
                         } else {
                             clearInterval(timer);
-                            continueButton.innerHTML = "continue";
-                            continueButton.addEventListener('mouseup', fadeOutPauseScreen)
+                            continueButton.innerHTML = "0 seconds left in break";
+                            // continueButton.addEventListener('mouseup', fadeOutPauseScreen)
+                            fadeOutPauseScreen()
                         }
                     }
                     const timer = setInterval(timerBySecond, 1000)

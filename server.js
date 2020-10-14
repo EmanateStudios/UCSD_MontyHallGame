@@ -121,12 +121,12 @@ app.post('/api/quiz', async (req, res) => {
 // CREATE NEW TRIAL ASSIGNED TO SUBJECT
 app.post('/api/trial', async (req, res) => {
 
-    const { trialIteration,round,score,pReward,xClick,yClick,door,success,subjectId,abandonedPage } = req.body;
+    const { trialIteration,level,round,score,pReward,xClick,yClick,door,success,subjectId,abandonedPage } = req.body;
 
     try {
         // first create new subject
         await trial.create({
-            trialIteration,round,score,pReward,xClick,yClick,door,success,subjectId,abandonedPage
+            trialIteration,level,round,score,pReward,xClick,yClick,door,success,subjectId,abandonedPage
         });
 
         res.status(200).send({ msg: "Trial Round Successfully" })
@@ -421,7 +421,7 @@ sequelize
     });
 
 // UNCOMMENT TO FLUSH DB
-sequelize.sync({ alter: true });
+sequelize.sync({ force: true });
 
 // // //-------------------GET PORT TO LISTEN ON-----------------
 const PORT = process.env.PORT || 5000;

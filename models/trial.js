@@ -2,6 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const trial = sequelize.define('trial', {
     trialIteration: DataTypes.INTEGER,
+    level: DataTypes.INTEGER,
     round: DataTypes.INTEGER,
     score: DataTypes.INTEGER,
     pReward: DataTypes.FLOAT,
