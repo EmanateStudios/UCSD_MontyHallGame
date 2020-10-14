@@ -2,9 +2,9 @@
 import gsap from 'gsap';
 
 export let gameSettings = {
-    currentLevel : 1,
+    currentLevel : 0,
     totalLevels : 3, //<-- production: 20
-    currentRound : 1,
+    currentRound : 0,
     totalRounds: 4, //<-- production: 6
     score : 0,
     trialIteration:0,
@@ -166,34 +166,3 @@ export const endScreen = () =>{
             }
         })
 }
-// buttonGroup.addEventListener("mousedown", () => { window.location.href = "/pages/exitInterview_1.html" });
-
-
-
-
-// // check if subject went through forms first. Or if disqualified can't return to game.
-// if (!localStorage.getItem("subject")) {
-//     window.location.href = "/pages/disqualified.html";
-// }
-
-// // check if page focus is lost
-// const disqualifyBackToStart = async () => {
-//     //if they get a perfect round or play to the end then don't delete
-//     if (currentRound !== numberOfRounds && level !== numberOfLevels) {
-//         let data = {
-//             refreshedPage: performance.navigation.type == 1 ? true : false,
-//             abandonedPage: performance.navigation.type == 1 ? false : true,
-//             subjectId: parseInt(localStorage.getItem("subject"))
-//         }
-//         const options = {
-//             method: 'POST',
-//             body: JSON.stringify(data),
-//             headers: { 'Content-Type': 'application/json' }
-//         }
-//         await fetch('/api/trial', options)
-//         // previous versions delete data. Now we just redirect.
-//         localStorage.removeItem("subject");
-//         localStorage.removeItem("gameVersion");
-//         window.location.href = "/pages/disqualified.html";
-//     }
-// }
