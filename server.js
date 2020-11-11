@@ -23,14 +23,14 @@ app.use(express.text({ limit: "1000mb" })); //Used to parse text/plain bodies;
 //================ALL THE PUT DATA================
 app.put('/api/exit', async (req, res) => {
 
-    const { finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds, onTask, playMethod, subjectId } = req.body;
+    const { finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds, onTask, playMethod, subjectId,talked } = req.body;
 
     try {
         // look for the subject
         let existingExitInterview = await exitInterview.findOne({ where: { subjectId } });
         if (existingExitInterview) {
             existingExitInterview.update({
-                finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds, onTask, playMethod
+                finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds, onTask, playMethod,talked
             })
             res.status(200).send('Successfully update exit interview')
         } else {
@@ -87,12 +87,12 @@ app.post('/api/demographic', async (req, res) => {
 // CREATE EXIT INTERVIEW
 app.post('/api/exit', async (req, res) => {
 
-    const { finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, aborted, subjectId } = req.body;
+    const { finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, aborted, subjectId,talked } = req.body;
 
     try {
         // first create new subject
         await exitInterview.create({
-            finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, aborted, subjectId
+            finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, aborted, subjectId,talked
         });
 
         res.status(200).send({ msg: "Exit Interview Added Successfully" })

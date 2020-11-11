@@ -19,16 +19,31 @@
     <div class="contentContainer bgGray sideShadows" unselectable="yes" onselectstart="return false;">
 
 
-        <h1>Please describe your third hunch here.</h1>
+        <h1>Final Review</h1>
         <hr>
 
         <form id="exitInterview_4" method="put">
+
+            <p>Although we never gave you any hint about this, the scores you could obtain depended strongly 
+                on how and where you clicked on the door. Thinking back to the game, can you please try to take 
+                a guess about HOW exactly it might have depended?</p>
+
             <textarea id="hunch"></textarea>
-            <p>use the slider below to express how confident you are on your hunch.</p>
+
+            <p>How confident are you in your observation?</p>
+
             <div class="slidecontainer">
                 <input class="slider" type="range" id="confidencePercent" step="10" min="0" max="100">
             </div>
             <p style="text-align: center" id="displayConfidence">50% Sure</p>
+
+            <hr>
+
+            <p>Did you talk to anyone about this game before playing today?</p>
+
+            <input class="checkRadio" type="radio" name="q1" value="1"> Yes
+            <input class="checkRadio" type="radio" name="q1" value="0"> No
+
             <div style="text-align: center">
                 <button type="submit">Next</button>
             </div>

@@ -217,7 +217,7 @@ AllForms.forEach(form => {
                 else {
                     try {
                         await fetch('/api/exit', options)
-                        window.location.href = "/pages/preUltimateQuestions.html";
+                        window.location.href = "/pages/exitInterview_4.html";
                     } catch (err) {
                         console.error(err);
                     }
@@ -232,6 +232,7 @@ AllForms.forEach(form => {
                 let data = {
                     hunch3: document.getElementById("hunch").value,
                     hunch3_level: document.getElementById("confidencePercent").value,
+                    talked: form.elements["q1"].value === "1" ? true : false,
                     finish_date_time: moment.utc().tz('America/Los_Angeles').format('YYYY-MM-DD h:mm:ss.ms'),
                     subjectId: localStorage.getItem("subject")
                 }
@@ -243,12 +244,16 @@ AllForms.forEach(form => {
                 if (data.hunch3 == "") {
                     alert("please fill out your hunch");
                     return;
+                } else if (!form.elements["q1"].value) {
+                    alert("please choose yes or no if you talked to anyone");
+                    return;
                 }
 
                 try {
                     await fetch('/api/exit', options)
                     localStorage.removeItem("gameVersion");
-                    window.location.href = "/pages/preUltimateQuestions.html";
+                    localStorage.removeItem("subject");
+                    window.location.href = "/pages/final.html";
                 } catch (err) {
                     console.error(err);
                 }

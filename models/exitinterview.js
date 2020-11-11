@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
     blur_1_seconds: DataTypes.BOOLEAN,
     blur_2_seconds: DataTypes.BOOLEAN,
     onTask: DataTypes.BOOLEAN,
-    playMethod: DataTypes.STRING
+    playMethod: DataTypes.STRING,
+    talked:DataTypes.BOOLEAN
   }, {});
   exitInterview.associate = function (models) {
     exitInterview.belongsTo(models.subject)
