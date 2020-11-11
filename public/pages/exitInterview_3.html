@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../reset.css">
     <!-- IMPORT OUR OWN STYLES -->
     <link rel="stylesheet" href="../app.css">
-    <title>Hunch 2</title>
+    <title>Final Review</title>
     <link rel='icon' href='../favicon.ico' type='image/x-icon' />
 </head>
 
@@ -19,25 +19,25 @@
     <div class="contentContainer bgGray sideShadows" unselectable="yes" onselectstart="return false;">
 
 
-        <h1>Please describe your second hunch here.</h1>
+        <h1>Final Review</h1>
         <hr>
 
         <form id="exitInterview_3" method="put">
+            <p>When you were actually clicking on the doors, did you notice anything that you could do 
+                to increase your chances of finding a treasure chest to get a higher score/more points?</p>
+
             <textarea id="hunch"></textarea>
-            <p>use the slider below to express how confident you are on your hunch.</p>
+            
+            <p>How confident are you in the observation you just described?</p>
+
             <div class="slidecontainer">
                 <input class="slider" type="range" id="confidencePercent" step="10" min="0" max="100">
             </div>
             <p style="text-align: center" id="displayConfidence">50% Sure</p>
 
-            <p>Do you have a third hunch?</p>
+            
 
-            <input class="checkRadio" type="radio" name="moreHunch" value="1"> Yes
-            <br>
-            <input class="checkRadio" type="radio" name="moreHunch" value="0"> No
-            <br>
-
-            <button type="submit">Next</button>
+            <button type="submit" style="float:right;">Next</button>
     </div>
     </form>
 

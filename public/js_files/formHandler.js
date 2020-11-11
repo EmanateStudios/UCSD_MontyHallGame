@@ -158,35 +158,7 @@ AllForms.forEach(form => {
             form.addEventListener('submit', async (event) => {
                 event.preventDefault();
 
-                let data = {
-                    has_hunch: form.elements["q1"].value,
-                    subjectId: localStorage.getItem("subject"),
-                    finish_date_time: moment.utc().tz('America/Los_Angeles').format('YYYY-MM-DD h:mm:ss.ms')
-                }
-                const options = {
-                    method: 'PUT',
-                    body: JSON.stringify(data),
-                    headers: { 'Content-Type': 'application/json' }
-                }
-                if (form.elements["q1"].value == "") {
-                    alert("please select an option");
-                    return;
-                }
-                if (form.elements["q1"].value === "1") {
-                    try {
-                        await fetch('/api/exit', options);
-                        window.location.href = "/pages/exitInterview_2.html";
-                    } catch (err) {
-                        console.error(err)
-                    }
-                } else {
-                    try {
-                        await fetch('/api/exit', options)
-                        window.location.href = "/pages/preUltimateQuestions.html";
-                    } catch (err) {
-                        console.error(err);
-                    }
-                }
+                window.location.href = "/pages/exitInterview_2.html";
             });
             break;
         // --------------FINAL EXIT INTERVIEW HUNCH 1------------------
@@ -205,25 +177,16 @@ AllForms.forEach(form => {
                     body: JSON.stringify(data),
                     headers: { 'Content-Type': 'application/json' }
                 }
-                if (form.elements["moreHunch"].value == "") {
-                    alert("please select an option");
-                    return;
-                }
+                
                 if (data.hunch1 == "") {
-                    alert("please fill out your hunch");
+                    alert("please fill out the form");
                     return;
                 }
-                if (form.elements["moreHunch"].value === "1") {
+                
+                else {
                     try {
                         await fetch('/api/exit', options)
                         window.location.href = "/pages/exitInterview_3.html";
-                    } catch (err) {
-                        console.error(err)
-                    }
-                } else {
-                    try {
-                        await fetch('/api/exit', options)
-                        window.location.href = "/pages/preUltimateQuestions.html";
                     } catch (err) {
                         console.error(err);
                     }
@@ -246,22 +209,12 @@ AllForms.forEach(form => {
                     body: JSON.stringify(data),
                     headers: { 'Content-Type': 'application/json' }
                 }
-                if (form.elements["moreHunch"].value == "") {
-                    alert("please select an option");
-                    return;
-                }
+                
                 if (data.hunch2 == "") {
-                    alert("please fill out your hunch");
+                    alert("please fill out the form");
                     return;
                 }
-                if (form.elements["moreHunch"].value === "1") {
-                    try {
-                        await fetch('/api/exit', options)
-                        window.location.href = "/pages/exitInterview_4.html";
-                    } catch (err) {
-                        console.error(err)
-                    }
-                } else {
+                else {
                     try {
                         await fetch('/api/exit', options)
                         window.location.href = "/pages/preUltimateQuestions.html";
