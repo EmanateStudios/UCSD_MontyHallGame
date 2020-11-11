@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "restart": "nodemon server.js",
     "dev": "parcel public/pages/game.html",
     "build": "parcel build public/pages/game.html -d ./build",
     "dev-cache": "parcel build public/pages/game.html --cache-dir cache/",

@@ -130,12 +130,10 @@ AllForms.forEach(form => {
                     headers: { 'Content-Type': 'application/json' }
                 }
                 if (form.elements["q1"].value === "2" &&
-                    form.elements["q2"].value === "3" &&
-                    form.elements["q3"].value === "1" &&
+                    form.elements["q2"].value === "1" &&
+                    form.elements["q3"].value === "3" &&
                     form.elements["q4"].value === "2" &&
-                    form.elements["q5"].value === "2" &&
-                    form.elements["q6"].value === "3" &&
-                    form.elements["q7"].value === "1"
+                    form.elements["q5"].value === "3" 
                 ) {
                     try {
                         await fetch('/api/quiz', options)
