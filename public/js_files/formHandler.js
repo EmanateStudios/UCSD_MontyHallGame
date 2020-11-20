@@ -57,7 +57,7 @@ AllForms.forEach(form => {
                     firstName: form.elements["firstName"].value,
                     lastName: form.elements["lastName"].value,
                     email: form.elements["emailConsent"].value,
-                    wantsConsentEmailed: form.elements["sendEmail"].checked,
+                    // wantsConsentEmailed: form.elements["sendEmail"].checked,
                     screenWidth,
                     screenHeight,
                     userAgent: navigator.userAgent
