@@ -1,4 +1,3 @@
-
 import '@babel/polyfill'
 //----- THREE IMPORTS
 import * as THREE from 'three';
@@ -18,8 +17,6 @@ import rubbleGLTF from '../THREE/Assets/gltf_files/Rubble.gltf'
 import {gameSettings, disqualificationSettings,disqualifyAction,breakScreen,endScreen} from './gameSettings.js'
 //----- GSAP IMPORTS
 import gsap from 'gsap';
-
-
 
 
 // THREE.JS NEEDS AT MINIMUM THESE COMPONENTS:
@@ -379,9 +376,9 @@ const recordDataToDatabase = async(pr = null,clickCoordinates = [0,0],whichDoor 
             body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json' }
         }
-        fetch('http://localhost:5000/api/trial', options).then(()=>{resolve()}) //<--actual call to server
-        console.log(`x: ${clickCoordinates[0]}, y:${clickCoordinates[1]}`)
-        // fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options).then(()=>{resolve()}) //<--actual call to server
+        // console.log(`x: ${clickCoordinates[0]}, y:${clickCoordinates[1]}`)
+        // fetch('http://localhost:5000/api/trial', options).then(()=>{resolve()}) //<--actual call to server 
+        fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options).then(()=>{resolve()}) //<--actual call to server
     })
 }
 //***** !!!! victory check also holds level and round logic !!! ***********
@@ -514,8 +511,13 @@ const GameClick = (event) => {
 }
 
 //-------------------------- DISQUALIFICATION PARAMETERS ---------------------------
-// if (!localStorage.getItem("subject")) { window.location.href = "/pages/disqualified.html"}
 
-// let {hidden, visibilityChange} = disqualificationSettings
-// document.addEventListener(visibilityChange, () => {disqualifyAction(isBreak)}, false);
+if (!localStorage.getItem("subject")) { 
+    // IMMIDIATELY REDIRECT IF NOT A SUBJECT
+    window.location.href = "/pages/disqualified.html"
+} else {
+    let {hidden, visibilityChange} = disqualificationSettings
+    document.addEventListener(visibilityChange, () => {disqualifyAction(isBreak)}, false);
+}
+
 
