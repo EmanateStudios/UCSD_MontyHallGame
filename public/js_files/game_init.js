@@ -359,7 +359,7 @@ const moveCameraAndDoor = (x, y, z, door) => {
 const recordDataToDatabase = async(pr = null,clickCoordinates = [0,0],whichDoor = 0) =>{
     return new Promise((resolve,reject) =>{
         const pReward = pr
-        console.log(`pReward: ${pReward || 'no reward'}, TI: ${trialIteration}`)
+        // console.log(`pReward: ${pReward || 'no reward'}, TI: ${trialIteration}`)
         // ------- record trial into database ---------
         let data = {
             trialIteration ,
@@ -379,9 +379,9 @@ const recordDataToDatabase = async(pr = null,clickCoordinates = [0,0],whichDoor 
             body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json' }
         }
-        // fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options) //<--actual call to server
-        // fetch('http://localhost:5000/api/trial', options).then(()=>{resolve()}) //<--actual call to server
-        fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options).then(()=>{resolve()}) //<--actual call to server
+        fetch('http://localhost:5000/api/trial', options).then(()=>{resolve()}) //<--actual call to server
+        console.log(`x: ${clickCoordinates[0]}, y:${clickCoordinates[1]}`)
+        // fetch('https://ucsd-mh-game.herokuapp.com/api/trial', options).then(()=>{resolve()}) //<--actual call to server
     })
 }
 //***** !!!! victory check also holds level and round logic !!! ***********
@@ -514,9 +514,8 @@ const GameClick = (event) => {
 }
 
 //-------------------------- DISQUALIFICATION PARAMETERS ---------------------------
-// if (!localStorage.getItem("subject")) { window.location.href = "/pages/disqualified.html";}
-if (!localStorage.getItem("subject")) { window.location.href = "/pages/disqualified.html"}
+// if (!localStorage.getItem("subject")) { window.location.href = "/pages/disqualified.html"}
 
-let {hidden, visibilityChange} = disqualificationSettings
-document.addEventListener(visibilityChange, () => {disqualifyAction(isBreak)}, false);
+// let {hidden, visibilityChange} = disqualificationSettings
+// document.addEventListener(visibilityChange, () => {disqualifyAction(isBreak)}, false);
 

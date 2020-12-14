@@ -154,6 +154,27 @@ app.post('/auth', async (req, res) => {
 });
 
 //=============== DELETING DATA=====================
+
+// DELTE ALL TRIALS FROM A SPECIFIC ID (PRIMARY KEY)
+app.delete('/api/trials', async (req, res) => {
+    const { pk, credentials } = req.body;
+
+    if (credentials === process.env.DB_SK) {
+        try {
+            // delete all entries from user
+            await trial.destroy({ where: { pk } });
+
+            return res.status(200).send({ msg: `Trial ${pk} Successfully Removed` })
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
+    } else {
+        res.status(403).send('Invalid access request');
+    }
+});
+
+// DELTE ALL TRIALS FROM A SPECIFIC USER
 app.delete('/api/trials', async (req, res) => {
     const { subjectId, credentials } = req.body;
 
@@ -171,6 +192,7 @@ app.delete('/api/trials', async (req, res) => {
         res.status(403).send('Invalid access request');
     }
 });
+// DELETE ALL TRIAL DATA
 app.delete('/api/trial/all', async(req,res)=>{
     const { credentials } = req.body;
 
@@ -188,6 +210,7 @@ app.delete('/api/trial/all', async(req,res)=>{
         res.status(403).send('Invalid access request');
     }
 })
+// DELETE ALL DATA BASE TABLES
 app.delete('/api/all', async(req,res)=>{
     const { credentials } = req.body;
 
