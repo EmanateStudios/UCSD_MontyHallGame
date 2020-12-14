@@ -156,7 +156,7 @@ app.post('/auth', async (req, res) => {
 //=============== DELETING DATA=====================
 
 // DELTE ALL TRIALS FROM A SPECIFIC ID (PRIMARY KEY)
-app.delete('/api/trials', async (req, res) => {
+app.delete('/api/trials/pk', async (req, res) => {
     const { pk, credentials } = req.body;
 
     if (credentials === process.env.DB_SK) {
