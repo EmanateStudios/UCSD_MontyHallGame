@@ -161,8 +161,8 @@ app.delete('/api/trials/pk', async (req, res) => {
 
     if (credentials === process.env.DB_SK) {
         try {
-            // delete all entries from user
-            await trial.destroy({ where: { pk } });
+            // delete any entry that equals pk
+            await trial.destroy({ where: { id:pk } });
 
             return res.status(200).send({ msg: `Trial ${pk} Successfully Removed` })
         } catch (err) {
