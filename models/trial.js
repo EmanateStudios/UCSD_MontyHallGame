@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     door:DataTypes.INTEGER,
     success: DataTypes.INTEGER,
     abandonedPage: DataTypes.BOOLEAN,
+    version: DataTypes.INTEGER
   }, {});
   trial.associate = function (models) {
     trial.belongsTo(models.subject)

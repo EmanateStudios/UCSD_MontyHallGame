@@ -18,6 +18,7 @@ import {gameSettings, disqualificationSettings,disqualifyAction,breakScreen,endS
 //----- GSAP IMPORTS
 import gsap from 'gsap';
 
+let version = localStorage.getItem("gameVersion")
 
 // THREE.JS NEEDS AT MINIMUM THESE COMPONENTS:
 // 1.)scene,2.) camera,3.) renderer (and animate function to actually utilize it),4.) object (4a: material, 4b: mesh, 4c: textures), 5.) and light(5a: type/intensity/color/properties,5b: shadows)
@@ -370,6 +371,7 @@ const recordDataToDatabase = async(pr = null,clickCoordinates = [0,0],whichDoor 
             success: pReward ? success : null,
             subjectId: localStorage.getItem("subject"),
             abandonedPage:false,
+            version
         }
         const options = {
             method: 'POST',

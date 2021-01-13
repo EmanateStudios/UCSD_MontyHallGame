@@ -47,7 +47,7 @@ app.put('/api/exit', async (req, res) => {
 // CREATE NEW DATA SUBJECT
 app.post('/api/subject', async (req, res) => {
 
-    const { startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed, screenWidth, screenHeight, userAgent } = req.body;
+    const { startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed, screenWidth, screenHeight, userAgent,version } = req.body;
 
     // check if email exists
     const existingUser = await subject.findOne({ where: { email } });
@@ -59,7 +59,7 @@ app.post('/api/subject', async (req, res) => {
         try {
             // first create new subject
             const newSubject = await subject.create({
-                startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed, screenWidth, screenHeight, userAgent
+                startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed, screenWidth, screenHeight, userAgent,version
             });
             res.status(200).json({ subject: newSubject.id })
         } catch (err) {
@@ -121,12 +121,12 @@ app.post('/api/quiz', async (req, res) => {
 // CREATE NEW TRIAL ASSIGNED TO SUBJECT
 app.post('/api/trial', async (req, res) => {
 
-    const { trialIteration,level,round,score,pReward,xClick,yClick,door,success,subjectId,abandonedPage } = req.body;
+    const { trialIteration,level,round,score,pReward,xClick,yClick,door,success,subjectId,abandonedPage,version } = req.body;
 
     try {
         // first create new subject
         await trial.create({
-            trialIteration,level,round,score,pReward,xClick,yClick,door,success,subjectId,abandonedPage
+            trialIteration,level,round,score,pReward,xClick,yClick,door,success,subjectId,abandonedPage,version
         });
 
         res.status(200).send({ msg: "Trial Round Successfully" })

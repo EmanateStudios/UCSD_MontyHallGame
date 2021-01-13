@@ -19,25 +19,7 @@ moment.tz.add([
 ]);
 let timeOnPageLoad = moment.utc().tz('America/Los_Angeles').format('YYYY-MM-DD h:mm:ss.ms'); //<--recorded as soon as page is loaded
 
-let getGameVersion = (id) => {
 
-    const v1Offset = 2;
-    const v2Offset = 1;
-    const rotateCycle = 3;
-    let gameVersion = "";
-
-    // assign version of game per 3rd intervals (managed by rotateCycle)
-    if ((id + v2Offset) % rotateCycle == 0) {
-        gameVersion = "version2";
-    } else if ((id + v1Offset) % rotateCycle == 0) {
-        gameVersion = "version1";
-    } else {
-        gameVersion = "versionP";
-    }
-
-    return gameVersion
-
-}
 // ACQUIRE ALL FORMS FROM PAGE
 // DOM elements need to be assigned to array first 
 let AllForms = [...document.getElementsByTagName("form")]
@@ -51,12 +33,15 @@ AllForms.forEach(form => {
             form.addEventListener('submit', async (event) => {
                 event.preventDefault();
 
+                let version = document.getElementById("version").getAttribute("attr");
+                
                 let data = {
                     startTime_consent: timeOnPageLoad,
                     endTime_consent: moment.utc().tz('America/Los_Angeles').format('YYYY-MM-DD h:mm:ss.ms'),
                     firstName: form.elements["firstName"].value,
                     lastName: form.elements["lastName"].value,
                     email: form.elements["emailConsent"].value,
+                    version,
                     // wantsConsentEmailed: form.elements["sendEmail"].checked,
                     screenWidth,
                     screenHeight,
@@ -68,7 +53,7 @@ AllForms.forEach(form => {
                     alert('please fill out all the inputs');
                     return;
                 }
-                // add version to local storage on client system based off subject ID
+                
 
                 const options = {
                     method: 'POST',
@@ -83,7 +68,7 @@ AllForms.forEach(form => {
                     const jsonData = await newUser.json();
                     const subjectID = jsonData.subject
                     localStorage.setItem("subject", subjectID)//<--temporarily provide persisted data to local storage. Removed on errors or at end of game.
-                    localStorage.setItem("gameVersion", getGameVersion(subjectID))
+                    localStorage.setItem("gameVersion", version)
                     window.location.href = "/pages/demographics.html";
                 }
             });
@@ -92,6 +77,8 @@ AllForms.forEach(form => {
         case 'demographics':
             form.addEventListener('submit', async (event) => {
                 event.preventDefault();
+
+                let version = localStorage.getItem("gameVersion")
 
                 let data = {
                     age: form.elements["age"].value,
@@ -111,7 +98,11 @@ AllForms.forEach(form => {
                     headers: { 'Content-Type': 'application/json' }
                 }
                 await fetch('/api/demographic', options)
-                window.location.href = "/pages/instructions.html";
+                if (version == 1){
+                    window.location.href = "/pages/instructions.html";
+                } else {
+                    window.location.href = "/pages/instructionsb.html";
+                }
             });
             break;
         // --------------QUIZ FORM ------------------
@@ -145,6 +136,46 @@ AllForms.forEach(form => {
                     try {
                         await fetch('/api/quiz', options)
                         window.location.href = "/pages/failedInstructions.html";
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+
+
+            });
+            break;
+        // --------------QUIZ VERSION 2 FORM ------------------
+        case 'quizb':
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                let data = {
+                    startTime_quiz: timeOnPageLoad,
+                    endTime_quiz: moment.utc().tz('America/Los_Angeles').format('YYYY-MM-DD h:mm:ss.ms'),
+                    subjectId: localStorage.getItem("subject")
+                }
+                const options = {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' }
+                }
+                if (form.elements["q1"].value === "2" &&
+                    form.elements["q2"].value === "1" &&
+                    form.elements["q3"].value === "3" &&
+                    form.elements["q4"].value === "2" &&
+                    form.elements["q5"].value === "3" &&
+                    form.elements["q6"].value === "1"
+                ) {
+                    try {
+                        await fetch('/api/quiz', options)
+                        window.location.href = "/game.html";
+                    } catch (err) {
+                        console.error(err)
+                    }
+                } else {
+                    try {
+                        await fetch('/api/quiz', options)
+                        window.location.href = "/pages/failedInstructionsb.html";
                     } catch (err) {
                         console.error(err);
                     }

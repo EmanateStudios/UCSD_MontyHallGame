@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     wantsConsentEmailed: DataTypes.BOOLEAN,
     screenWidth: DataTypes.INTEGER,
     screenHeight: DataTypes.INTEGER,
-    userAgent: DataTypes.STRING
+    userAgent: DataTypes.STRING,
+    version: DataTypes.INTEGER
   }, {});
   subject.associate = function (models) {
     subject.hasMany(models.trial);
